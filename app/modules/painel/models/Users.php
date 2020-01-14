@@ -22,6 +22,7 @@ class Users extends model
 	//Verifica os dados do POST corretamente
 	public function doLogin($login, $password){
 
+
 		$sql = $this->db->prepare("SELECT * FROM users WHERE login = :login AND password = :password");
 		$sql->bindValue(':login', $login);
 		$sql->bindValue(':password', md5($password));
@@ -32,7 +33,7 @@ class Users extends model
 
 			$_SESSION['ccUser'] = $row['id'];
 
-			return true;
+			return $row;
 		} else {
 			return false;
 		}
@@ -42,7 +43,6 @@ class Users extends model
 	//Ver se o usuario esta logado e tem permissao
 	public function setLoggedUser(){
 
-		error_Log(print_r($_SESSION,1));
 
 		if(isset($_SESSION['ccUser']) && !empty($_SESSION['ccUser'])) {
 
@@ -54,7 +54,7 @@ class Users extends model
 			if($sql->rowCount() > 0 ){
 				$this->permissions = new Permissions();
 				$this->userInfo = $sql->fetch();
-				$id_group = $this->userInfo['id_group'];
+				$id_group = $this->userInfo['id'];
 				$this->permissions->setGroup($id_group, $this->userInfo['id_company']);
 			}
 
@@ -72,7 +72,7 @@ class Users extends model
 	}
 
 	public function hasPermission($name){
-		
+
 		return $this->permissions->hasPermission($name);
 	}
 
@@ -83,6 +83,14 @@ class Users extends model
 		} else 
 		return 0;
 	}
+
+	public function isClient(){
+		if(isset($this->userInfo['id_cliente'])){
+			return true;
+		} else 
+		return 0;
+	}
+	
 
 	public function getGroup(){
 		if(isset($this->userInfo['id_group'])){
@@ -110,14 +118,39 @@ class Users extends model
 	}
 
 	public function getName(){
-		if(isset($this->userInfo['login'])){
+		if(isset($this->userInfo['name'])){
 
-			return $this->userInfo['login'];
+			return $this->userInfo['name'];
 		} else 
 		return '';
 
 	}
 
+	public function getCliente(){
+		
+		if(isset($this->userInfo['id_cliente']) && $this->userInfo['id_cliente'] != 0 ){
+			return true;
+		} else 
+		return false;
+
+	}
+
+	public function getClienteId(){
+		
+		if(isset($this->userInfo['id_cliente']) && $this->userInfo['id_cliente'] != 0 ){
+			return ($this->userInfo['id_cliente']);
+		} else 
+		return false;
+	}
+
+	public function getPhoto(){
+		
+		if(isset($this->userInfo['user_photo_url']) && $this->userInfo['user_photo_url'] != '' ){
+			return $this->userInfo['user_photo_url'];
+		} else 
+		return '';
+
+	}
 
 	public function getInfo($id, $id_company){
 
@@ -247,11 +280,80 @@ class Users extends model
 		return $array;
 	}
 
-	
+	public function hasPermissionByidSearch($name, $id_user, $id_company, $id_cliente)
+	{
+
+		$tipoUsuario = !empty($id_user) ? 'id_usuario' : 'id_cliente';
+		$tipoBind 	 = !empty($id_user) ? $id_user : $id_cliente;
+
+		
+		$sql = $this->db->prepare("SELECT * FROM permission_groups WHERE {$tipoUsuario} = :id AND id_company = :id_company");
+		$sql->bindValue(':id', $tipoBind);
+		$sql->bindValue(':id_company', $id_company);
+		$sql->execute();
+
+		if ($sql->rowCount() == 1) {
+			$row = $sql->fetch();
+
+			if (empty($row['params'])) {
+				$row['params'] = '0';
+			}
+
+			$params = $row['params'];
+
+			$sql = $this->db->prepare("SELECT upper(name) as name FROM permission_params WHERE id IN($params) AND id_company = :id_company");
+			$sql->bindValue(':id_company', $id_company);
+			$sql->execute();
+
+			if ($sql->rowCount() > 0) {
+				foreach ($sql->fetchAll() as $item) {
+					$this->permissionById[] = $item['name'];
+				}
+			}
+		}
+
+		return in_array($name, $this->permissionById) ? true : false;
+		
+	}
+
+	public function saveComentyExercicioImagem($Parametros, $id_usuario, $id_company)
+	{
+
+		$id_etapa 	= $Parametros['id_etapa'];
+		$comentario = ltrim($Parametros['text']);
+
+		$sql = $this->db->prepare("SELECT comentario FROM comentarios_etapa WHERE id_user = :id_user AND id_company = :id_company AND id_etapa = :id_etapa LIMIT 1");
+		$sql->bindValue(":id_user", $id_usuario);
+		$sql->bindValue(":id_company", $id_company);
+		$sql->bindValue(":id_etapa", $id_etapa);
+		$sql->execute();
+
+		if ($sql->rowCount() == 1) {
+			$sql = $this->db->prepare("UPDATE comentarios_etapa SET comentario = :comentario WHERE id_user = :id_user AND id_company = :id_company AND id_etapa = :id_etapa");
+			$sql->bindValue(":id_user", $id_usuario);
+			$sql->bindValue(":id_company", $id_company);
+			$sql->bindValue(":comentario", $comentario);
+			$sql->bindValue(":id_etapa", $id_etapa);
+
+			return $sql->execute() ? true : false;
+
+		} else {
+
+			$sql = $this->db->prepare("INSERT INTO comentarios_etapa SET 
+					comentario = :comentario, 
+					id_user = :id_user,
+					id_company = :id_company,
+					id_etapa = :id_etapa			
+				");
+
+			$sql->bindValue(":id_user", $id_usuario);
+			$sql->bindValue(":id_company", $id_company);
+			$sql->bindValue(":comentario", $comentario);
+			$sql->bindValue(":id_etapa", $id_etapa);
+
+			return $sql->execute() ? true : false;
+		}
+	}
+
+
 }
-
-
-
-
-
-?>

@@ -7,7 +7,6 @@
 		<form method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL ?>">
 			<div class="tab-content">
 				<input type="hidden" class="form-control" name="id_comercial" id="id_comercial" autocomplete="off" value="<?php echo $tableInfo['id_comercial']; ?>">
-
 				<div class="box box-default box-solid">
 					<div class="row">
 						<div class="col-md-12">

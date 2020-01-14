@@ -4,22 +4,25 @@ class Permissions extends model {
 	private $group;
 	private $permissions;
 
-	public function setGroup($id, $id_company){
+	public function setGroup($id, $id_company, $cliente = false){
+		
 		$this->group = $id;
 		$this->permissions = array();
 
-		$sql = $this->db->prepare("SELECT * FROM permission_groups WHERE id = :id AND id_company = :id_company");
+		$type = $cliente == false ? '`id_usuario`' : '`id_cliente`';
+
+		$sql = $this->db->prepare("SELECT * FROM permission_groups WHERE {$type} = :id AND id_company = :id_company LIMIT 1");
 		$sql->bindValue(':id', $id);
 		$sql->bindValue(':id_company', $id_company);
 		$sql->execute();
+		#error_log(print_r($sql->rowCount(),1));
 
-		if ($sql->rowCount() > 0 ) {
+		if ($sql->rowCount() == 1 ) {
 			$row = $sql->fetch();
 
 			if (empty($row['params'])) {
 				$row['params'] = '0';
 			}
-
 
 			$params = $row['params'];
 
@@ -35,20 +38,44 @@ class Permissions extends model {
 		} 	
 	}
 
+	public function returnPermission(){
+		return $this->permissions;
+	}
+
 	public function hasPermission($name){
-		if(in_array($name, $this->permissions)){
+
+		
+		if (in_array($name, $this->permissions)) {
 			return true;
 		} else {
 			return false;
 		}
-
-		
 	}
 
 	public function getlist($id_company){
 
 		$array = array();
 		$sql = $this->db->prepare("SELECT *, upper(name) as name FROM permission_params WHERE id_company = 1");
+
+		$sql->bindValue(":id_company", $id_company);
+		$sql->execute();
+
+		if ($sql->rowCount() > 0) {
+			$array = $sql->fetchAll();
+
+		} else {
+
+			$error = "não localizado";
+		}
+
+		return $array;
+
+	}
+
+	public function getlistCliente($id_company){
+
+		$array = array();
+		$sql = $this->db->prepare("SELECT id, upper(name) as name FROM permission_params pm WHERE pm.id_company = :id_company AND  pm.type = 1");
 
 		$sql->bindValue(":id_company", $id_company);
 		$sql->execute();

@@ -15,8 +15,6 @@ class loginController extends controller {
 			$_SESSION['errorMsg'] = '';
 		}
 
-		
-
 		$this->loadView(null, $this->dataInfo, false);	
 	}
 
@@ -24,16 +22,24 @@ class loginController extends controller {
 
 		if(isset($_POST['login']) && !empty($_POST['password'])){
 
-
+		
 			$array = $this->post();
 
 			$login = addslashes(lcfirst($_POST['login']));
 			$pass = addslashes(ltrim($_POST['password']));
 			$u = new Users();
 
-			if($u->doLogin($login, $pass)){
-				header("location:".BASE_URL_PAINEL."home");
-				exit;
+			$row = $u->doLogin($login, $pass);
+
+			if(isset($row['id']) && $row['id'] != ''){
+				if($row['id_cliente'] != ''){
+					header("location:".BASE_URL_PAINEL."home");
+					exit;
+				} else { 
+					header("location:".BASE_URL_PAINEL."clientes");
+					exit;
+				}
+				
 			} else {
 				$_SESSION['errorMsg'] = 'senha e/ou usuario estão incorretos';
 			}

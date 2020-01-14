@@ -19,9 +19,9 @@ Class Companies extends model {
 
 	public function getName(){
 		if (isset($this->companyInfo['name'])) {
+			
 			return $this->companyInfo['name'];
-
-			# code...
+		
 		}else {
 			return '';
 		}

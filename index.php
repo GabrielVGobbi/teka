@@ -9,9 +9,14 @@ session_start();
 
 
 //Configurações gerais
-require 'system/Config.php';
+require 'system/config.php';
 //Rotas do sistema
 require 'app/config/routes.php';
+// constantes
+require 'system/constant.php';
+
+
+require 'vendor/autoload.php';
 
 //Carregamento automático de classes
 spl_autoload_register(function($class) {

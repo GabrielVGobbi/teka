@@ -1,78 +1,168 @@
-<div class="col-xs-12">
-	<div class="box box-primary">
-		<div class="box-header with-border">
-			<h3 class="box-title">Exemplo</h3>
-			<div class="box-tools pull-right">
-				<div class="has-feedback">
-					<button class="btn btn-sm btn-info pop" onclick="getModalFiltro('<?php echo $viewData['pageController']; ?>')">
-						<i class="glyphicon glyphicon-search"></i>
-					</button>
-					<a href="http://www2.cena.com.br/comercial" type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></a>
-					<a href="http://www2.cena.com.br/comercial/add" type="button" class="btn btn-default btn-sm"><i class="fa fa-fw fa-plus-circle"></i> Novo</a>
-				</div>
-			</div>
-		</div>
+<?php $nomecliente = str_replace(' ', '_', $tableInfo['cli_nome']); ?>
 
-		<div class="box-body no-padding">
-			<?php require("filtro.php"); ?>
-			<div class="table-responsive mailbox-messages">
-				<div class="box">
-					<div class="box-body table-responsive no-padding">
-					</div>
-				</div>
-				<table class="table table-hover">
-					<?php if (count($tableDados) > 0) : ?>
-						<tbody>
-							<div class="box">
-								<div class="box-body table-responsive no-padding">
-									<table class="table table-hover">
-										<tbody>
-											<tr>
-												<th style="width: 10%;">Ações</th>
-												<th>ID</th>
-												<th>Nome da Obra</th>
-												<th>Responsável</th>
-												<th>Concessionaria</th>
-												<th>Serviço</th>
-												<th style="width: 10%;" class="text-center">Status</th>
-											</tr>
-											<?php foreach ($tableDados as $inf) : ?>
-												<tr>
-													<td>
-													<!-- botão -->
-													</td>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
+<div class="container">
+    <div class="col-md-12">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_dados" data-toggle="tab">Dados</a></li>
+                <?php $permissions = array();
+                foreach ($tableInfo['permissions'] as $perm => $value) : ?>
+                    <?php if($value != 'Entrevista'): ?>
+                        <li><a href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
+                    <?php endif; ?>
+                    <?php $permissions[] = $value; ?>
+                <?php endforeach; ?>
 
-												</tr>
-											<?php endforeach; ?>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</tbody>
-					<?php else : ?>
-						<tr>
-							<td style="width: 50%;text-align: center;"> Não foram encontrados resultados </td>
-						</tr>
-					<?php endif; ?>
-				</table>
-			</div>
-		</div>
-	</div>
-	<div class="pull-left" style="right: 10px;">
-		<p> Total: 0 </p>
-	</div>
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-wrench"></i>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li> <a href="<?php echo BASE_URL_PAINEL; ?>clientes/entrevista/<?php echo $tableInfo['id_client']; ?>">Entrevista </a></li>
+                    </ul>
+                </div>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_dados">
+                    <br>
+                    <div class="row">
+                        <div class="col-md-3">
+
+                        <?php $nomecliente = str_replace(' ', '_', $tableInfo['cli_nome']).'_'.str_replace(' ', '_', $tableInfo['cli_sobrenome']);  ?>
+
+                            <img style="max-height: 110px;min-height: 110px;" class="profile-user-img img-responsive img-circle" src="<?php echo BASE_URL ?>app/assets/images/clientes/<?php echo mb_strtolower($nomecliente,'UTF-8') ?>/<?php echo mb_strtolower($tableInfo['cli_photo'],'UTF-8') ?>" alt="User profile picture">
+                            <h3 class="profile-username text-center"><?php echo ucfirst($tableInfo['cli_nome']) . ' ' . ucfirst($tableInfo['cli_sobrenome']); ?></h3>
+                            <p class="text-muted text-center"><?php echo $tableInfo['cli_cartela']; ?></p>
+                            <div class="text-center">
+                                <!--<img style="max-height: 110px;min-height: 110px;" src="<?php echo BASE_URL; ?>app/assets/imagens/paleta.PNG"> -->
+                                <div style="max-height: 110px;min-height: 110px;" > </div> 
+
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <div id="formnome" class="form-group">
+                                <label>Nome</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-fw fa-user"></i>
+                                    </div>
+                                    <input type="text" data-name="<?php echo $tableInfo['cli_nome']; ?>" class="form-control" name="cli_nome" id="cli_nome" value="<?php echo $tableInfo['cli_nome']; ?>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div id="formnome" class="form-group">
+                                <label>Sobrenome</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-fw fa-user"></i>
+                                    </div>
+                                    <input type="text" data-name="<?php echo $tableInfo['cli_sobrenome']; ?>" class="form-control" name="cli_sobrenome" id="cli_sobrenome" value="<?php echo $tableInfo['cli_sobrenome']; ?>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div id="formnome" class="form-group">
+                                <label>Email</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-envelope"></i>
+                                    </div>
+                                    <input type="text" class="form-control" name="cli_email" id="cli_email" value="<?php echo $tableInfo['cli_email']; ?>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div id="formnome" class="form-group">
+                                <label>Data de nascimento</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-envelope"></i>
+                                    </div>
+                                    <input type="text" class="form-control" name="cli_aniversario" id="cli_aniversario" value="<?php echo $tableInfo['cli_aniversario']; ?>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div id="formnome" class="form-group">
+                                <label>Profissão</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-fw fa-user-secret"></i>
+                                    </div>
+                                    <input type="text" class="form-control" name="cli_profissao" id="cli_profissao" value="<?php echo $tableInfo['cli_profissao']; ?>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div id="formnome" class="form-group">
+                                <label>Telefone</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-fw fa-phone"></i>
+                                    </div>
+                                    <input type="text" class="form-control" name="cli_telefone" id="cli_telefone" value="<?php echo $tableInfo['cli_telefone']; ?>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-9">
+                            <div class="box box-default box-solid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title">Endereço</h3>
+                                        </div>
+                                        <div class="box-body" style="">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label>CEP</label>
+                                                    <input type="text" class="form-control" name="cep" id="cep" autocomplete="off" value="<?php echo $tableInfo['cep']; ?>">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Rua</label>
+                                                    <input type="text" readonly class="form-control" name="rua" id="rua" autocomplete="off" value="<?php echo $tableInfo['rua']; ?>">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label>Nº</label>
+                                                    <input type="text" class="form-control" name="numero" id="numero" autocomplete="off" value="<?php echo $tableInfo['numero']; ?>">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label>Complemento</label>
+                                                    <input type="text" class="form-control" name="complemento" id="complemento" autocomplete="off" value="<?php echo $tableInfo['complemento']; ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <?php foreach ($tableInfo['permissions'] as $perm => $value) : ?>
+                    <div class="tab-pane" id="<?php echo str_replace(' ', '', $value); ?>">
+                        <?php include_once('clientes/includes/' . str_replace(' ', '', $value) . '.php'); ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="box-footer no-padding">
-	<div class="mailbox-controls">
-		<ul class="pagination pagination-sm pull-right">
-			<li class="active ">
-				<a href="http://www2.cena.com.br/comercial?p=url=comercial&amp;p=1">1</a>
-			</li>
-		</ul>
-	</div>
-</div>
+
+<script src="<?php echo BASE_URL; ?>app/assets/js/parametros/<?php echo $viewData['pageController']; ?>.js"></script>

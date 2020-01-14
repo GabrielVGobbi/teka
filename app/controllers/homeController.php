@@ -4,7 +4,9 @@ class homeController extends Controller {
 
 	public function index($parametro = null) {
 		 
-		 $this->loadView(false, array(), false);
+		
+
+		$this->loadView('', array(), false);
 	}
 
 }

@@ -1,6 +1,6 @@
 <?php 
 
-class notfoundController extends Controller {
+class notfoundController extends controller {
 
 	public function index() {
 		echo "404!";

@@ -6,7 +6,7 @@ class dashController extends Controller {
 		$teste = new Teste();
 		
         if ($teste->isLogged() == false) {
-            header("Location: " . BASE_URL . "login");
+            header("Location: " . BASE_URL_PAINEL . "login");
             exit();
         }
 		

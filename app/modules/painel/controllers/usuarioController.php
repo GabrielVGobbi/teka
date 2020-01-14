@@ -10,7 +10,7 @@ Class usuarioController extends controller {
 		
 		if($this->user->isLogged() == false){
 
-			header("Location: ".BASE_URL."login");
+			header("Location: ".BASE_URL_PAINEL."login");
 			exit();
 		}
 

@@ -1,8 +1,5 @@
 <?php
-/**
- * Rotas do sistema
- * @author Luis Eduardo <luisdesenvolvedor@gmail.com>
- */
+
 global $routes;
 $routes = array();
 
