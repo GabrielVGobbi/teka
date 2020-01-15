@@ -5,7 +5,7 @@
 			<li class=""><a href="#tab_dados" data-toggle="tab">Dados</a></li>
 			<?php $permissions = array();
 			foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-				<li  class="<?php echo $value == 'Exercicio De Imagem' ? 'active' : ''?>"><a href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
+				<li  class="<?php echo $value == 'Teste de Coloração Pessoal' ? 'active' : ''?>"><a href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
 				<?php $permissions[] = $value; ?>
 			<?php endforeach; ?>
 			<li class=""><a href="#tab_geral" data-toggle="tab">Geral</a></li>
@@ -188,7 +188,7 @@
 				</div>
 			</div>
 			<?php foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-				<div class="tab-pane <?php echo $value == 'Exercicio De Imagem' ? 'active' : ''?>" id="<?php echo str_replace(' ', '', $value); ?>">
+				<div class="tab-pane <?php echo $value == 'Teste de Coloração Pessoal' ? 'active' : ''?>" id="<?php echo str_replace(' ', '', $value); ?>">
 					<?php include_once('includes/' . str_replace(' ', '', $value) . '.php'); ?>
 				</div>
 			<?php endforeach; ?>

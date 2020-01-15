@@ -17,7 +17,7 @@
             </a>
             <div class="box-body">
                 <div class="col-md-12 col-sm-12" id="" style="display:">
-                    <ul class="mailbox-attachments clearfix" id="previewInUsed">
+                    <ul class="mailbox-attachments clearfix preview" id="previewInUsed">
                     </ul>
                 </div>
             </div>
@@ -40,7 +40,7 @@
 
             <div class="box-body">
                 <div class="col-md-12 col-sm-12" id="" style="display:">
-                    <ul class="mailbox-attachments clearfix" id="previewInLike">
+                    <ul class="mailbox-attachments clearfix preview" id="previewInLike">
                     </ul>
                 </div>
             </div>
@@ -61,7 +61,7 @@
             </a>
             <div class="box-body">
                 <div class="col-md-12 col-sm-12" id="" style="display:">
-                    <ul class="mailbox-attachments clearfix" id="previewNotUsed">
+                    <ul class="mailbox-attachments clearfix preview" id="previewNotUsed">
                     </ul>
                 </div>
             </div>
@@ -101,7 +101,7 @@
 
         function list_image_inUsed() {
             var type = 'inUsed';
-            $('.clearfix').hide();
+            $('.preview').hide();
             $.ajax({
                 url: BASE_URL_PAINEL + "ajax/getImagesByCliente/" + type + "/<?php echo $tableInfo['id_client']; ?>/<?php echo $nomecliente; ?>",
                 success: function(data) {
@@ -113,7 +113,7 @@
 
         function list_image_inLike() {
             var type = 'inLike';
-            $('.clearfix').hide();
+            $('.preview').hide();
             $.ajax({
                 url: BASE_URL_PAINEL + "ajax/getImagesByCliente/" + type + "/<?php echo $tableInfo['id_client']; ?>/<?php echo $nomecliente; ?>",
                 success: function(data) {
@@ -125,7 +125,7 @@
 
         function list_image_notUsed() {
             var type = 'notUsed';
-            $('.clearfix').hide();
+            $('.preview').hide();
             $.ajax({
                 url: BASE_URL_PAINEL + "ajax/getImagesByCliente/" + type + "/<?php echo $tableInfo['id_client']; ?>/<?php echo $nomecliente; ?>",
                 success: function(data) {

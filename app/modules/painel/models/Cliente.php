@@ -508,55 +508,129 @@ class Cliente extends Model
 		if ($sql->rowCount() == 1) {
 			$nomeArquivo = $sql->fetch();
 
-			if(!empty($id_cliente))
+			if (!empty($id_cliente))
 				$sql = $this->db->prepare("
 					DELETE FROM images
 					WHERE id_image = :id_image 
 				");
-				$sql->bindValue(':id_image', $id_image);
-				$sql->execute();
+			$sql->bindValue(':id_image', $id_image);
+			$sql->execute();
 
-				$sql = $this->db->prepare("
+			$sql = $this->db->prepare("
 					DELETE FROM client_image
 					WHERE id_image = :id_image AND id_client = :id_client AND id_company = :id_company 
-				"); 
-				$sql->bindValue(':id_client', $id_cliente);
-				$sql->bindValue(':id_company', $id_company);
-				$sql->bindValue(':id_image', $id_image);
-				$sql->execute();
+				");
+			$sql->bindValue(':id_client', $id_cliente);
+			$sql->bindValue(':id_company', $id_company);
+			$sql->bindValue(':id_image', $id_image);
+			$sql->execute();
 
-				$filename = 'app/assets/images/clientes/' . $nomecliente . '/' . $nomeArquivo['img_type'] . '/' . $nomeArquivo['img_url'] ;
-				unlink($filename);
+			$filename = 'app/assets/images/clientes/' . $nomecliente . '/' . $nomeArquivo['img_type'] . '/' . $nomeArquivo['img_url'];
+			unlink($filename);
 		}
-
-		
 	}
 
-	public function getComentarioByEtapaById($id_etapa, $id_cliente, $id_company){
+	public function getComentarioByEtapaById($id_etapa, $id_cliente, $id_company)
+	{
 
 
-		if(!empty($id_cliente))
-			try{
-				
+		if (!empty($id_cliente))
+			try {
+
 				$sql = $this->db->prepare("SELECT comentario FROM comentarios_etapa WHERE id_user = :id_user AND id_company = :id_company AND id_etapa = :id_etapa LIMIT 1");
 				$sql->bindValue(":id_user", $id_cliente);
 				$sql->bindValue(":id_company", $id_company);
 				$sql->bindValue(":id_etapa", $id_etapa);
 				$sql->execute();
 
-				
-				if($sql->rowCount() == 1){
+
+				if ($sql->rowCount() == 1) {
 					$this->retorno = $sql->fetch();
-					
+
 					return $this->retorno['comentario'];
 				}
-		
-
 			} catch (PDOExecption $e) {
 
 				controller::alert('warning', 'Não foi possivel, contate o administrador da empresa');
 			}
+	}
+
+	public function getColoracaoByClient($id_cliente)
+	{
+
+		$ArrayColoracao = array();
+
+		$sql = $this->db->prepare("
+			SELECT *, car.car_img, car.car_nome FROM coloracao col
+				INNER JOIN cartela car ON (col.id_cartela = car.id_cartela)
+			WHERE id_user = :id_cliente
+		");
+
+		$sql->bindValue(':id_cliente', $id_cliente);
+		$sql->execute();
+
+		if ($sql->rowCount() == 1) {
+			$ArrayColoracao = $sql->fetch();
+		}
+
+		return $ArrayColoracao;
+	}
+
+	public function editColoracaoByClient($id_cliente, $id_company, $Parametros)
+	{
+
+		$id_coloracao = $Parametros['id_coloracao'];
+
+		if (isset($id_coloracao) && !empty($id_coloracao)) {
+
+			$sql = $this->db->prepare("UPDATE `coloracao` SET  
+				
+				col_contraste = :contraste,
+				id_cartela = :id_cartela, 
+				col_temperatura = :col_temperatura,
+				col_intensidade = :col_intensidade,
+				col_profundidade = :col_profundidade
+
+				WHERE id_coloracao = :id_coloracao
+		
+			");
+
+			$sql->bindValue(":contraste", $Parametros['Contraste']);
+			$sql->bindValue(":id_cartela", $Parametros['cartela']);
+			$sql->bindValue(":col_temperatura", $Parametros['Temperatura']);
+			$sql->bindValue(":col_intensidade", $Parametros['Intensidade']);
+			$sql->bindValue(":col_profundidade", $Parametros['Profundidade']);
+
+			$sql->bindValue(":id_coloracao", $id_coloracao);
+
+			$sql->execute()
+				? controller::alert('success', 'Editado com sucesso')
+				: controller::alert('error', 'Ops!! deu algum erro');
+
+		} else {
+
+			$sql = $this->db->prepare("INSERT INTO `coloracao` SET 
+				
+				col_contraste = :contraste,
+				id_cartela = :id_cartela, 
+				col_temperatura = :col_temperatura,
+				col_intensidade = :col_intensidade,
+				col_profundidade = :col_profundidade,
+				id_user = :id_cliente
 			
+			");
+
+			$sql->bindValue(":contraste", $Parametros['Contraste']);
+			$sql->bindValue(":id_cartela", $Parametros['cartela']);
+			$sql->bindValue(":col_temperatura", $Parametros['Temperatura']);
+			$sql->bindValue(":col_intensidade", $Parametros['Intensidade']);
+			$sql->bindValue(":col_profundidade", $Parametros['Profundidade']);
+			$sql->bindValue(":id_cliente", $id_cliente);
+
+			return $sql->execute()
+				? controller::alert('success', 'Editado com sucesso')
+				: controller::alert('error', 'Ops!! deu algum erro');
+		}
 
 	}
 }

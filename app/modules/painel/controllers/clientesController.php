@@ -161,4 +161,17 @@ class ClientesController extends controller
         return $this->cliente->getComentarioByEtapaById($tipoEtapa, $id_cliente, $this->id_company);
 
     }
+
+    public function ColoracaoByClient($id_cliente){
+
+        if (isset($_POST) && $id_cliente != '') {
+
+            $this->cliente->editColoracaoByClient($id_cliente, $this->user->getCompany(), ($_POST));
+
+            header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $id_cliente);
+
+            exit();
+        } 
+
+    }
 }
