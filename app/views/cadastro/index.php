@@ -46,7 +46,7 @@
 
             <div class="row">
 
-                <div class="col-md-4 order-md-2 mb-4" id="tur1">
+                <div class="col-md-12 order-md-2 mb-4" id="tur1">
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                         <span class="text-muted">Etapas</span>
                         <span class="badge badge-secondary badge-pill"></span>
@@ -61,7 +61,7 @@
                     <ul class="list-group mb-3 etps-price">
                     </ul>
                 </div>
-                <div class="col-md-8 order-md-1">
+                <div class="col-md-12 order-md-1">
                     <h4 class="mb-3">Faça seu cadastro</h4>
 
                     <input type="hidden" name="client" value="true">

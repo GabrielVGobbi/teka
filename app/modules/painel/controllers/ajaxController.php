@@ -123,17 +123,17 @@ class ajaxController extends controller
                                 min-height: 200px;">
                                 <span class="mailbox-attachment-icon">
                                     <img
-                                class="fa fa-fw fa-file-image-o img-responsive" src="'. BASE_URL .'app/assets/images/clientes/'. mb_strtolower($nomecliente,'UTF-8') .'/' . $file['img_type'] . '/'. mb_strtolower($file['img_url'],'UTF-8').'">
+                                class="fa fa-fw fa-file-image-o img-responsive" src="'. BASE_URL .'app/assets/images/clientes/'. mb_strtolower($id_cliente,'UTF-8') .'/' . $file['img_type'] . '/'. mb_strtolower($file['img_url'],'UTF-8').'">
                                     </img>
                                 </span>
                                 <div class="mailbox-attachment-info"  style="max-width: 29ch;
                                 overflow: hidden;
                                 text-overflow: ellipsis;
                                 white-space: nowrap;">
-                                    <a href="'. BASE_URL .'app/assets/images/clientes/'. mb_strtolower($nomecliente,'UTF-8') .'/' . $file['img_type'] . '/'. mb_strtolower($file['img_url'],'UTF-8').'" target="_blank" class="mailbox-attachment-name">' . $fileName . '</a>
+                                    <a href="'. BASE_URL .'app/assets/images/clientes/'. mb_strtolower($id_cliente,'UTF-8') .'/' . $file['img_type'] . '/'. mb_strtolower($file['img_url'],'UTF-8').'" target="_blank" class="mailbox-attachment-name">' . $fileName . '</a>
                                     <span class="mailbox-attachment-size">
                                         ' . $type . '
-                                        <a download href="'. BASE_URL .'app/assets/images/clientes/'. mb_strtolower($nomecliente,'UTF-8') .'/' . $file['img_type'] . '/'. mb_strtolower($file['img_url'],'UTF-8').'" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                                        <a download href="'. BASE_URL .'app/assets/images/clientes/'. mb_strtolower($id_cliente,'UTF-8') .'/' . $file['img_type'] . '/'. mb_strtolower($file['img_url'],'UTF-8').'" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
                                         <a onclick="toastAlertDelete(' . $file['id_image'] . ', ' . $id_cliente . ')" class="btn btn-default btn-xs pull-right"><i class="fa fa-trash"></i></a>
 
                                         </span>

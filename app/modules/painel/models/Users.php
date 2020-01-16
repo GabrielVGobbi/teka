@@ -145,10 +145,16 @@ class Users extends model
 
 	public function getPhoto(){
 		
-		if(isset($this->userInfo['user_photo_url']) && $this->userInfo['user_photo_url'] != '' ){
-			return $this->userInfo['user_photo_url'];
-		} else 
-		return '';
+		if($this->isClient()){
+			
+		}else {
+			if(isset($this->userInfo['user_photo_url']) && $this->userInfo['user_photo_url'] != '' ){
+				return $this->userInfo['user_photo_url'];
+			} else 
+			return '';
+		}
+
+		
 
 	}
 

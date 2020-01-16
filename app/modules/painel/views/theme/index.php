@@ -17,7 +17,45 @@
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>app/assets/css/AdminLTE-2.4.5/dist/css/skins/_all-skins.min.css">
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>app/assets/css/AdminLTE-2.4.5/bower_components/select2/dist/css/select2.min.css">
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/plugins/iCheck/all.css">
-  
+
+  <link rel="stylesheet" href="<?php echo BASE_URL; ?>app/assets/js/wheelmenu.css">
+<style>
+
+
+   
+    .wheel-button:hover{
+      color: white;
+    }
+
+
+ 
+
+    .wheel li a, .wheel li a:visited{
+      background: rgba(0,0,0,0.65);
+      border-radius: 50px;
+      font-weight: bold;
+      padding: 10px;
+      text-align: center;
+      width: 80px;
+    height: 59px;
+      border: 1px solid black;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.5);
+      -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.5);
+      -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.5);
+      color: white;
+      -moz-transition: all 0.25s ease;
+      -webkit-transition: all 0.25s ease;
+      -o-transition: all 0.25s ease;
+      transition: all 0.25s ease;
+    }
+
+    .wheel li a:hover{
+      background: rgba(0,0,0,0.8);
+    }
+</style>
+  <script type="text/javascript" src="<?php echo BASE_URL; ?>app/assets/js/jquery.wheelmenu.min.js"></script>
+
+
   <link href="<?php echo BASE_URL; ?>node_modules/toastr/build/toastr.min.css" rel="stylesheet" type="text/css" />
 
   <script src='https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/dropzone.js' type='text/javascript'></script>
@@ -48,8 +86,11 @@
         <span class="logo-mini"><b>A</b>ST</span>
         <span class="logo-lg"><b>Admin</b>Style</span>
       </a>
+      <!-- Menu Cliente -->
 
       <nav class="navbar navbar-static-top">
+
+
         <?php if ($this->user->getCliente() == false) : ?>
           <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
           <?php endif; ?>
@@ -58,18 +99,29 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           </a>
+          <?php if (!$this->user->getCliente() == false) : ?>
+            <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Meus Looks <span class="sr-only">(current)</span></a></li>
+              </ul>
+              
+            </div>
+          <?php endif; ?>
 
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <img src="<?php echo ($this->user->getPhoto()) ?>" class="user-image" alt="User Image">
+                  <?php if(!$this->user->isClient()): ?>
+                    <img src="<?php echo ($this->user->getPhoto()) ?>" class="user-image" alt="User Image">
+                  <?php endif;?>
                   <span class="hidden-xs"><?php echo $this->user->getName(); ?></span>
                 </a>
                 <ul class="dropdown-menu">
                   <li class="user-header">
-                    <img src="<?php echo ($this->user->getPhoto()) ?>" class="img-circle" alt="User Image">
+                    <?php if(!$this->user->isClient()): ?>
+                      <img src="<?php echo ($this->user->getPhoto()) ?>" class="img-circle" alt="User Image">
+                    <?php endif;?>
 
                     <p>
                       <?php echo $this->user->getName(); ?>
@@ -95,6 +147,8 @@
       </nav>
     </header>
 
+
+    <!-- Menu Administrador -->
     <?php if ($this->user->getCliente() == false) : ?>
       <aside class="main-sidebar ">
         <section class="sidebar" style="height: auto;">
@@ -186,15 +240,14 @@
   <script src="<?php echo BASE_URL; ?>app/assets/css/AdminLTE-2.4.5/plugins/iCheck/icheck.min.js"></script>
 
   <?php if (isset($_SESSION['alert']) && !empty($_SESSION['alert'])) : ?>
-  <script>
-    $(function() {
-      toastr.<?php echo $_SESSION['alert']['tipo']; ?>('<?php echo $_SESSION['alert']['mensagem'] ?>');
-    });
-  </script>
-  <?php unset($_SESSION['alert']); ?>
-<?php endif; ?>
+    <script>
+      $(function() {
+        toastr.<?php echo $_SESSION['alert']['tipo']; ?>('<?php echo $_SESSION['alert']['mensagem'] ?>');
+      });
+    </script>
+    <?php unset($_SESSION['alert']); ?>
+  <?php endif; ?>
 
 </body>
 
 </html>
-

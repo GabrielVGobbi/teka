@@ -139,21 +139,8 @@ class Cliente extends Model
 				$cli_sobrenome = str_replace(' ', '_', $cli_sobrenome);
 				$name = mb_strtolower($nome_cliente . '_' . $cli_sobrenome, 'UTF-8');
 
-				if (!is_dir("app/assets/images/clientes/" . $name)) {
-					mkdir("app/assets/images/clientes/" . $name);
-					if (!is_dir("app/assets/images/clientes/" . $name . "/inUsed")) {
-						mkdir("app/assets/images/clientes/" . $name . "/inUsed");
-					}
-					if (!is_dir("app/assets/images/clientes/" . $name . "/notUsed")) {
-						mkdir("app/assets/images/clientes/" . $name . "/notUsed");
-					}
-					if (!is_dir("app/assets/images/clientes/" . $name . "/inLike")) {
-						mkdir("app/assets/images/clientes/" . $name . "/inLike");
-					}
-				}
-
 				if (isset($file) && !empty($file)) {
-					$this->addPhoto($id_cliente, $file['fotos'], $id_company, $name);
+					$this->Photo($id_cliente, $file['fotos'], $id_company, $name);
 				}
 
 				$this->addPermissions($id_cliente, $id_company);
@@ -163,6 +150,81 @@ class Cliente extends Model
 				controller::alert('success', 'Cadastrado com sucesso, edite as permissões');
 
 				$this->db = null;
+
+				return $id_cliente;
+			}
+		} catch (PDOExecption $e) {
+
+			$sql->rollback();
+			error_log(print_r("Error!: " . $e->getMessage() . "</br>", 1));
+
+			controller::alert('warning', 'Não foi possivel cadastrar o cliente, contate o administrador da empresa');
+		}
+
+		#_FILES['fotos']
+	}
+
+	public function edit($Parametros, $id_company, $file, $id_user)
+	{
+
+		$id_cliente = $Parametros['id'];
+
+		$id_endereco = $this->setEnderecoCliente($Parametros, $id_company, $Parametros['end']);
+
+		$cli_nome 		 = isset($Parametros['cli_nome']) ? controller::ReturnValor($Parametros['cli_nome']) : '';
+		$cli_sobrenome 	 = isset($Parametros['cli_sobrenome']) ? controller::ReturnValor($Parametros['cli_sobrenome'])  : '';
+		$cli_profissao 	 = isset($Parametros['cli_profissao']) ? controller::ReturnValor($Parametros['cli_profissao'])  : '';
+
+		$cli_aniversario = isset($Parametros['cli_aniversario']) ? ($Parametros['cli_aniversario'])  : '';
+		$cli_email 		 = isset($Parametros['cli_email']) ? (mb_strtolower($Parametros['cli_email'], "UTF-8"))  : '';
+		$cli_telefone 	 = isset($Parametros['cli_telefone']) ? ($Parametros['cli_telefone'])  : '';
+
+		$params = isset($Parametros['etapas']) ? implode(',', $Parametros['etapas']) : '';
+
+		try {
+			$sql = $this->db->prepare("UPDATE client SET 
+				
+				cli_nome 		= :cli_nome, 
+				cli_sobrenome 	= :cli_sobrenome,
+				cli_aniversario = :cli_aniversario,
+				cli_telefone 	= :cli_telefone,
+				cli_profissao 	= :cli_profissao,
+				cli_email       = :cli_email,
+				id_address 		= :id_endereco,
+				cli_etapas 		= :params,
+				
+				edited_at		= NOW(),
+				edited_by		= :id_user
+
+				WHERE id_client = :id_client AND id_company = :id_company
+			");
+
+			$sql->bindValue(":cli_nome", ucfirst($cli_nome));
+			$sql->bindValue(":cli_sobrenome", ucfirst($cli_sobrenome));
+			$sql->bindValue(":cli_aniversario", $cli_aniversario);
+			$sql->bindValue(":cli_telefone", $cli_telefone);
+			$sql->bindValue(":cli_profissao", ucfirst($cli_profissao));
+			$sql->bindValue(":cli_email", $cli_email);
+			$sql->bindValue(":id_endereco", $id_endereco);
+			$sql->bindValue(":id_company", $id_company);
+			$sql->bindValue(":params", $params);
+
+			$sql->bindValue(":id_client", $id_cliente);
+			$sql->bindValue(":id_user", $id_user);
+
+			if ($sql->execute()) {
+
+				$nome_cliente = str_replace(' ', '_', $cli_nome);
+				$cli_sobrenome = str_replace(' ', '_', $cli_sobrenome);
+				$name = mb_strtolower($nome_cliente . '_' . $cli_sobrenome, 'UTF-8');
+
+				if (isset($file) && !empty($file)) {
+					$this->Photo($id_cliente, $file['fotos'], $id_company, $name);
+				}
+
+				#controller::setLog($Parametros, 'cliente', 'add');
+
+				controller::alert('success', 'Editado com sucesso');
 
 				return $id_cliente;
 			}
@@ -279,26 +341,33 @@ class Cliente extends Model
 
 		return $id;
 	}
-
-	public function addPhoto($id_cliente, $photo, $id_company, $nome_cliente, $type = '_user.jpg')
+	/**
+	 * Adiciona foto usuario
+	 * @param  int 	$id_cliente = id do cliente
+	 * @param  array $photo vindo do cadastro/edição do cliente
+	 * @param  int 	$id_company = id_company
+	 * @param  string 	$nome_cliente = nome do cliente
+	 * @param  string 	$type = tipo da imagem
+	 * @return boolean TRUE ou FALSE
+	*/
+	public function Photo($id_cliente, $photo, $id_company, $nome_cliente, $type = '_user.jpg')
 	{
-
 		if (isset($photo)) {
-
+			
 			$tipo = $photo['type'];
 
 			if (in_array($tipo, array('image/jpeg', 'image/png', 'image/jpg'))) {
 
 				$tmpname = mb_strtolower($nome_cliente . $type, 'UTF-8');
 
-				if (is_dir("app/assets/images/clientes/" . $nome_cliente)) {
-					move_uploaded_file($photo['tmp_name'], 'app/assets/images/clientes/' . $nome_cliente . '/' . $tmpname);
+				if (is_dir("app/assets/images/clientes/" . $id_cliente)) {
+					move_uploaded_file($photo['tmp_name'], 'app/assets/images/clientes/' . $id_cliente . '/' . $tmpname);
 				} else {
-					mkdir("app/assets/images/clientes/" . $nome_cliente);
-					move_uploaded_file($photo['tmp_name'], 'app/assets/images/clientes/' . $nome_cliente . '/' . $tmpname);
+					mkdir("app/assets/images/clientes/" . $id_cliente);
+					move_uploaded_file($photo['tmp_name'], 'app/assets/images/clientes/' . $id_cliente . '/' . $tmpname);
 				}
 
-				list($width_orig, $height_orig) = getimagesize('app/assets/images/clientes/' . $nome_cliente . '/' . $tmpname);
+				list($width_orig, $height_orig) = getimagesize('app/assets/images/clientes/' . $id_cliente . '/' . $tmpname);
 				$ratio = $width_orig / $height_orig;
 
 				$width = 300;
@@ -312,15 +381,17 @@ class Cliente extends Model
 
 				$img = imagecreatetruecolor($width, $height);
 				if ($tipo == 'image/jpeg') {
-					$origi = imagecreatefromjpeg('app/assets/images/clientes/' . $nome_cliente . '/' . $tmpname);
+					$origi = imagecreatefromjpeg('app/assets/images/clientes/' . $id_cliente . '/' . $tmpname);
 				} elseif ($tipo == 'image/png') {
-					$origi = imagecreatefrompng('app/assets/images/clientes/' . $nome_cliente . '/' . $tmpname);
+					$origi = imagecreatefrompng('app/assets/images/clientes/' . $id_cliente . '/' . $tmpname);
 				}
 
 				imagecopyresampled($img, $origi, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
 
-				$imgag = imagejpeg($img, 'app/assets/images/clientes/' . $nome_cliente . '/' . $tmpname, 80);
+				$imgag = imagejpeg($img, 'app/assets/images/clientes/' . $id_cliente . '/' . $tmpname, 80);
 
+				//$user_enderec = BASE_URL_PAINEL."app/assets/images/clientes/".$id_cliente."/".$tmpname;
+				
 				$sql = $this->db->prepare("
 						UPDATE client SET
                 			cli_photo = :cli_photo		  
@@ -333,11 +404,18 @@ class Cliente extends Model
 				$sql->execute();
 			}
 		} else {
-
 			error_log(print_r('erro na foto', 1));
 		}
 	}
-
+	/**
+	 * Adiciona foto no exercicio de imagem do cliente
+	 * @param  int 	$id_cliente = id do cliente
+	 * @param  string 	$nome_cliente = nome do cliente
+	 * @param  array $photo vindo do cadastro/edição do cliente
+	 * @param  int 	$id_company = id_company
+	 * @param  string 	$pasta = pasta na qual vai ser adicionado a foto 
+	 * @return boolean TRUE ou FALSE
+	*/
 	public function addPhotoExImagemClient($id_cliente, $nome_cliente, $photo, $id_company, $pasta)
 	{
 
@@ -352,20 +430,20 @@ class Cliente extends Model
 
 				$tmpname = (md5(time() . rand(0, 999))) . $type;
 
-				if (is_dir("app/assets/images/clientes/" . $nome_cliente)) {
-					if (!is_dir("app/assets/images/clientes/" . $nome_cliente . "/" . $pasta)) {
-						mkdir("app/assets/images/clientes/" . $nome_cliente . "/" . $pasta);
+				if (is_dir("app/assets/images/clientes/" . $id_cliente)) {
+					if (!is_dir("app/assets/images/clientes/" . $id_cliente . "/" . $pasta)) {
+						mkdir("app/assets/images/clientes/" . $id_cliente . "/" . $pasta);
 					}
 
-					move_uploaded_file($photo['file']['tmp_name'], 'app/assets/images/clientes/' . $nome_cliente . "/" . $pasta . '/' . $tmpname);
+					move_uploaded_file($photo['file']['tmp_name'], 'app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
 				} else {
-					mkdir("app/assets/images/clientes/" . $nome_cliente);
-					mkdir("app/assets/images/clientes/" . $nome_cliente . "/" . $pasta);
+					mkdir("app/assets/images/clientes/" . $id_cliente);
+					mkdir("app/assets/images/clientes/" . $id_cliente . "/" . $pasta);
 
-					move_uploaded_file($photo['file']['tmp_name'], 'app/assets/images/clientes/' . $nome_cliente . "/" . $pasta . '/' . $tmpname);
+					move_uploaded_file($photo['file']['tmp_name'], 'app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
 				}
 
-				list($width_orig, $height_orig) = getimagesize('app/assets/images/clientes/' . $nome_cliente . "/" . $pasta . '/' . $tmpname);
+				list($width_orig, $height_orig) = getimagesize('app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
 				$ratio = $width_orig / $height_orig;
 
 				$width = 300;
@@ -379,14 +457,14 @@ class Cliente extends Model
 
 				$img = imagecreatetruecolor($width, $height);
 				if ($tipo == 'image/jpeg') {
-					$origi = imagecreatefromjpeg('app/assets/images/clientes/' . $nome_cliente . "/" . $pasta . '/' . $tmpname);
+					$origi = imagecreatefromjpeg('app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
 				} elseif ($tipo == 'image/png') {
-					$origi = imagecreatefrompng('app/assets/images/clientes/' . $nome_cliente . "/" . $pasta . '/' . $tmpname);
+					$origi = imagecreatefrompng('app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname);
 				}
 
 				imagecopyresampled($img, $origi, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
 
-				$imgag = imagejpeg($img, 'app/assets/images/clientes/' . $nome_cliente . "/" . $pasta . '/' . $tmpname, 80);
+				$imgag = imagejpeg($img, 'app/assets/images/clientes/' . $id_cliente . "/" . $pasta . '/' . $tmpname, 80);
 
 				$sql = $this->db->prepare("
 						INSERT INTO images SET 
@@ -606,7 +684,6 @@ class Cliente extends Model
 			$sql->execute()
 				? controller::alert('success', 'Editado com sucesso')
 				: controller::alert('error', 'Ops!! deu algum erro');
-
 		} else {
 
 			$sql = $this->db->prepare("INSERT INTO `coloracao` SET 
@@ -631,6 +708,5 @@ class Cliente extends Model
 				? controller::alert('success', 'Editado com sucesso')
 				: controller::alert('error', 'Ops!! deu algum erro');
 		}
-
 	}
 }

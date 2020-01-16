@@ -5,7 +5,7 @@
 			<li class=""><a href="#tab_dados" data-toggle="tab">Dados</a></li>
 			<?php $permissions = array();
 			foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-				<li  class="<?php echo $value == 'Teste de Coloração Pessoal' ? 'active' : ''?>"><a href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
+				<li  class="<?php echo $value == 'Analise de Silhueta' ? 'active' : ''?>"><a href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
 				<?php $permissions[] = $value; ?>
 			<?php endforeach; ?>
 			<li class=""><a href="#tab_geral" data-toggle="tab">Geral</a></li>
@@ -27,7 +27,7 @@
 						</button>
 						<?php $nomecliente = str_replace(' ', '_', $tableInfo['cli_nome']).'_'.str_replace(' ', '_', $tableInfo['cli_sobrenome']);  ?>
 
-						<img style="max-height: 110px;min-height: 110px;" class="profile-user-img img-responsive img-circle" src="<?php echo BASE_URL ?>app/assets/images/clientes/<?php echo mb_strtolower($nomecliente,'UTF-8') ?>/<?php echo mb_strtolower($tableInfo['cli_photo'],'UTF-8') ?>" alt="User profile picture">
+						<img style="max-height: 110px;min-height: 110px;" class="profile-user-img img-responsive" src="<?php echo BASE_URL ?>app/assets/images/clientes/<?php echo mb_strtolower($tableInfo['id_client'],'UTF-8') ?>/<?php echo mb_strtolower($tableInfo['cli_photo'],'UTF-8') ?>" alt="User profile picture">
 						<h3 class="profile-username text-center"><?php echo ucfirst($tableInfo['cli_nome']) . ' ' . ucfirst($tableInfo['cli_sobrenome']); ?></h3>
 						<p class="text-muted text-center"><?php echo $tableInfo['cli_cartela']; ?></p>
 						<div class="text-center">
@@ -188,7 +188,7 @@
 				</div>
 			</div>
 			<?php foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-				<div class="tab-pane <?php echo $value == 'Teste de Coloração Pessoal' ? 'active' : ''?>" id="<?php echo str_replace(' ', '', $value); ?>">
+				<div class="tab-pane <?php echo $value == 'Analise de Silhueta' ? 'active' : ''?>" id="<?php echo str_replace(' ', '', $value); ?>">
 					<?php include_once('includes/' . str_replace(' ', '', $value) . '.php'); ?>
 				</div>
 			<?php endforeach; ?>
