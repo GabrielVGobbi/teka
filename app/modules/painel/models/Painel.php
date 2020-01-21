@@ -61,5 +61,12 @@ class Painel extends model
         return $this->retorno;
 
     }
+    public function getFoto($id_cliente, $foto){
+
+       return BASE_URL.'app/assets/images/clientes/'.mb_strtolower($id_cliente, 'UTF-8').'/'.mb_strtolower($foto, 'UTF-8');
+
+
+
+    }
 
 }

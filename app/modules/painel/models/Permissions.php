@@ -38,6 +38,23 @@ class Permissions extends model {
 		} 	
 	}
 
+	public function addPermissions($id_cliente, $id_company)
+	{
+
+		$sql = $this->db->prepare("INSERT INTO permission_groups SET 
+				
+			params = 1,
+			id_company = :id_company,
+			id_cliente = :id_cliente
+			
+		");
+
+		$sql->bindValue(":id_cliente", $id_cliente);
+		$sql->bindValue(":id_company", $id_company);
+
+		return $sql->execute();
+	}
+
 	public function returnPermission(){
 		return $this->permissions;
 	}

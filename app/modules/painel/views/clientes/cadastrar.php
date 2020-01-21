@@ -64,7 +64,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-envelope"></i>
                                     </div>
-                                    <input type="text" class="form-control" name="cli_aniversario" id="cli_aniversario" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask=""> 
+                                    <input type="text" class="form-control" name="cli_aniversario" id="cli_aniversario" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="">
                                 </div>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-phone"></i>
                                     </div>
-                                    <input type="text" class="form-control" name="cli_telefone" id="cli_telefone"   data-inputmask='"mask": "(11) 99999-9999"' data-mask>
+                                    <input type="text" class="form-control" name="cli_telefone" id="cli_telefone" data-inputmask='"mask": "(11) 99999-9999"' data-mask>
                                 </div>
                             </div>
                         </div>
@@ -89,6 +89,18 @@
                                         <i class="fa fa-fw fa-user-secret"></i>
                                     </div>
                                     <input type="text" class="form-control" name="cli_profissao" id="cli_profissao">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div id="" class="form-group">
+                                <label>Definir Senha</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-fw fa-lock"></i>
+                                    </div>
+                                    <input type="password" class="form-control" name="password" id="password">
                                 </div>
                             </div>
                         </div>
@@ -136,6 +148,15 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <label class="popver_urgencia" style="margin-right: 17px;">
+                        <input type="checkbox" class="checkbox_desgn" name="notifyEmail" value="true">
+                        <span>
+                            <span class="icon unchecked">
+                                <span class="mdi mdi-check"></span>
+                            </span>
+                            Enviar Aviso por Email
+                        </span>
+                    </label>
                     <div id="submit" class="btn btn-primary">Salvar</div>
                 </div>
             </div>

@@ -21,9 +21,10 @@ class Users extends model
 
 	//Verifica os dados do POST corretamente
 	public function doLogin($login, $password){
+		
+		$login = mb_strtolower($login, 'UTF-8');
 
-
-		$sql = $this->db->prepare("SELECT * FROM users WHERE login = :login AND password = :password");
+		$sql = $this->db->prepare("SELECT * FROM users WHERE email = :login AND password = :password");
 		$sql->bindValue(':login', $login);
 		$sql->bindValue(':password', md5($password));
 		$sql->execute();
@@ -32,6 +33,13 @@ class Users extends model
 			$row = $sql->fetch();
 
 			$_SESSION['ccUser'] = $row['id'];
+
+			if($row['user_photo_url'] == ''){
+				
+				controller::alert('warning', 'Atualize sua foto de perfil');
+
+			}
+
 
 			return $row;
 		} else {
@@ -153,8 +161,25 @@ class Users extends model
 			} else 
 			return '';
 		}
-
 		
+	}
+
+	public function getIdUserByClient($id_cliente, $id_company){
+		
+		$id = array();
+		$id['id'] = '';
+
+
+		$sql = $this->db->prepare("SELECT id FROM users WHERE id_cliente = :id_cliente AND id_company = :id_company LIMIT 1");
+		$sql->bindValue(':id_cliente', $id_cliente);
+		$sql->bindValue(':id_company', $id_company);
+		$sql->execute();
+
+		if($sql->rowCount() == 1) {
+			$id = $sql->fetch();
+		}
+
+		return $id['id'];
 
 	}
 

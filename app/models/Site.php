@@ -3,11 +3,11 @@
 class Site extends Model
 {
 
-	#Cliente add
+	#Cliente Cadastrado Pelo Site 
 	public function addClienteByCadastro($Parametros, $id_company)
 	{
 
-		$id_endereco = $this->setEnderecoCliente($Parametros, $id_company);
+		$id_endereco = isset($Parametros['cep']) && $Parametros['cep'] != '' ? $this->setEnderecoCliente($Parametros, $id_company) : '';
 
 		$cli_nome 		 = isset($Parametros['cli_nome']) ? controller::ReturnValor($Parametros['cli_nome']) : '';
 		$cli_sobrenome 	 = isset($Parametros['cli_sobrenome']) ? controller::ReturnValor($Parametros['cli_sobrenome'])  : '';
@@ -18,7 +18,7 @@ class Site extends Model
 		$cli_telefone 	 = isset($Parametros['cli_telefone']) ? ($Parametros['cli_telefone'])  : '';
 
 
-		$params = implode(',', $Parametros['etapas']);
+		$params = isset($Parametros['etapas']) ? implode(',', $Parametros['etapas']) : '';
 
 		try {
 			$sql = $this->db->prepare("INSERT INTO client SET 
@@ -55,15 +55,20 @@ class Site extends Model
 				$id_cliente = $this->db->lastInsertId();
 
 				//Add usuario pelo cliente cadastrado
-				if (isset($Parametros['client'])  && $Parametros['client'] == true) {
+				if (isset($Parametros['action'])  && isset($Parametros['type'])) {
 					$this->addUsuarioByCliente($id_company, $Parametros, $id_cliente);
+					$p = new Permissions;
+					$p->addPermissions($id_cliente, $id_company);
+
 				}
 
 				#controller::setLog($Parametros, 'cliente', 'add');
 
 				controller::alert('success', 'Sucesso!! Faça o login com suas credenciais');
-				$email = new Email;
-				$email->enviarEmail($Parametros);
+				
+				#$email = new Email;
+				
+				#$email->enviarEmail($Parametros);
 
 				return $id_cliente;
 			}
@@ -77,6 +82,8 @@ class Site extends Model
 
 		#_FILES['fotos']
 	}
+
+	
 
 	public function setEnderecoCliente($Parametros, $id_company, $id_endereco = false)
 	{
@@ -148,14 +155,13 @@ class Site extends Model
 	public function addUsuarioByCliente($id_company, $Parametros, $id_cliente)
 	{
 
-		$login = mb_strtolower($Parametros['cli_login'], 'utf-8');
+
 		$pass  = ($Parametros['cli_senha']);
 		$name = $Parametros['cli_nome'] . ' ' . $Parametros['cli_sobrenome'];
 		$email = $Parametros['cli_email'];
 
 		$sql = $this->db->prepare("
 			INSERT INTO users SET 
-			login = :login,
 			id_company = :id_company,
 			password = :password,
 			usr_info = :cliente,
@@ -164,7 +170,6 @@ class Site extends Model
 			email = :email
         ");
 
-		$sql->bindValue(":login", $login);
 		$sql->bindValue(":password", md5($pass));
 		$sql->bindValue(":id_company", $id_company);
 		$sql->bindValue(":cliente", 'cliente');

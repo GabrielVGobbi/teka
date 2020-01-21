@@ -32,7 +32,6 @@ class Cliente extends Model
 	public function getInfo($id_cliente, $id_company)
 	{
 		$sql = $this->db->prepare("SELECT * FROM client cli 
-		
 			INNER JOIN cliente_endereco clie ON (clie.id_endereco = cli.id_address)
 			WHERE id_company = :id_company AND id_client = :id_client LIMIT 1
 		");
@@ -131,10 +130,9 @@ class Cliente extends Model
 				$id_cliente = $this->db->lastInsertId();
 
 				//Add usuario pelo cliente cadastrado
-				if (isset($Parametros['client'])  && $Parametros['client'] == true) {
-					$this->addUsuarioByCliente($id_company, $Parametros, $id_cliente);
-				}
-
+				
+				$this->addUsuarioByCliente($id_company, $Parametros, $id_cliente);
+				
 				$nome_cliente = str_replace(' ', '_', $cli_nome);
 				$cli_sobrenome = str_replace(' ', '_', $cli_sobrenome);
 				$name = mb_strtolower($nome_cliente . '_' . $cli_sobrenome, 'UTF-8');
@@ -167,6 +165,7 @@ class Cliente extends Model
 	public function edit($Parametros, $id_company, $file, $id_user)
 	{
 
+		error_log(print_r($Parametros,1));
 		$id_cliente = $Parametros['id'];
 
 		$id_endereco = $this->setEnderecoCliente($Parametros, $id_company, $Parametros['end']);
@@ -309,14 +308,14 @@ class Cliente extends Model
 	public function addUsuarioByCliente($id_company, $Parametros, $id_cliente)
 	{
 
-		$login = mb_strtolower($Parametros['cli_login'], 'utf-8');
+		#$login = mb_strtolower($Parametros['cli_login'], 'utf-8');
 		$pass  = ($Parametros['password']);
 		$name = $Parametros['cli_nome'] . ' ' . $Parametros['cli_sobrenome'];
 		$email = $Parametros['cli_email'];
 
 		$sql = $this->db->prepare("
 			INSERT INTO users SET 
-			login = :login,
+			
 			id_company = :id_company,
 			password = :password,
 			usr_info = :cliente,
@@ -325,7 +324,7 @@ class Cliente extends Model
 			email = :email
         ");
 
-		$sql->bindValue(":login", $login);
+		#$sql->bindValue(":login", $login);
 		$sql->bindValue(":password", md5($pass));
 		$sql->bindValue(":id_company", $id_company);
 		$sql->bindValue(":cliente", 'cliente');
@@ -349,11 +348,11 @@ class Cliente extends Model
 	 * @param  string 	$nome_cliente = nome do cliente
 	 * @param  string 	$type = tipo da imagem
 	 * @return boolean TRUE ou FALSE
-	*/
+	 */
 	public function Photo($id_cliente, $photo, $id_company, $nome_cliente, $type = '_user.jpg')
 	{
 		if (isset($photo)) {
-			
+
 			$tipo = $photo['type'];
 
 			if (in_array($tipo, array('image/jpeg', 'image/png', 'image/jpg'))) {
@@ -391,7 +390,7 @@ class Cliente extends Model
 				$imgag = imagejpeg($img, 'app/assets/images/clientes/' . $id_cliente . '/' . $tmpname, 80);
 
 				//$user_enderec = BASE_URL_PAINEL."app/assets/images/clientes/".$id_cliente."/".$tmpname;
-				
+
 				$sql = $this->db->prepare("
 						UPDATE client SET
                 			cli_photo = :cli_photo		  
@@ -415,7 +414,7 @@ class Cliente extends Model
 	 * @param  int 	$id_company = id_company
 	 * @param  string 	$pasta = pasta na qual vai ser adicionado a foto 
 	 * @return boolean TRUE ou FALSE
-	*/
+	 */
 	public function addPhotoExImagemClient($id_cliente, $nome_cliente, $photo, $id_company, $pasta)
 	{
 
@@ -608,24 +607,24 @@ class Cliente extends Model
 		}
 	}
 
-	public function getComentarioByEtapaById($id_etapa, $id_cliente, $id_company)
+	public function getComentarioByEtapaById($id_etapa, $id_company, $type)
 	{
 
-
-		if (!empty($id_cliente))
+		if (!empty($type))
 			try {
 
-				$sql = $this->db->prepare("SELECT comentario FROM comentarios_etapa WHERE id_user = :id_user AND id_company = :id_company AND id_etapa = :id_etapa LIMIT 1");
-				$sql->bindValue(":id_user", $id_cliente);
+				$sql = $this->db->prepare("SELECT comentario,id_user,user.name
+					FROM comentarios_etapa cmp
+						INNER JOIN users user on (user.id = cmp.id_user)
+					WHERE cmp.id_company = :id_company AND id_etapa = :id_etapa AND id_user IN {$type} ORDER BY cme_id DESC
+				");
+
 				$sql->bindValue(":id_company", $id_company);
 				$sql->bindValue(":id_etapa", $id_etapa);
 				$sql->execute();
-
-
-				if ($sql->rowCount() == 1) {
-					$this->retorno = $sql->fetch();
-
-					return $this->retorno['comentario'];
+				if ($sql->rowCount() > 0) {
+					$this->retorno = $sql->fetchALL();
+					return $this->retorno;
 				}
 			} catch (PDOExecption $e) {
 

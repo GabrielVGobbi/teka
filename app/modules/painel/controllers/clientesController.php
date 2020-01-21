@@ -22,6 +22,7 @@ class ClientesController extends controller
         $this->cliente = new Cliente();
         $this->painel = new Painel();
         $this->permissions = new Permissions();
+        $this->email = new Email();
 
         $this->dataInfo = array(
             'pageController' => 'clientes',
@@ -41,7 +42,10 @@ class ClientesController extends controller
 
             $this->dataInfo['tableDados'] = $this->cliente->paginate();
 
+            #$this->email->notifyEmailClient(84, $this->user->getCompany());
+
             $this->loadView($this->dataInfo['pageController'] . "/index", $this->dataInfo);
+            
         } else {
 
             $this->loadViewErrorNotPermission();
@@ -71,16 +75,21 @@ class ClientesController extends controller
 
                 $id_cliente = $this->cliente->add($_POST, $this->user->getCompany(), $_FILES);
 
+                if(isset($_POST['notifyEmail']) && ($_POST['notifyEmail'] == 'true')){
+
+                    $this->email->notifyEmailClient($id_cliente, $this->user->getCompany());
+                    
+                }
+
                 header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $id_cliente);
 
                 exit();
+
             } else {
-                error_log(print_r($_POST,1));
 
-                $this->cliente->edit($_POST, $this->user->getCompany());
+                $this->cliente->edit($_POST, $this->user->getCompany(), $_FILES, $this->user->getId() );
                 
-
-                header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController']);
+                header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $_POST['id'] );
 
                 exit();
             }
@@ -156,9 +165,22 @@ class ClientesController extends controller
     }
     public function getComentarioByEtapaById($tipoEtapa, $id_cliente){
 
-        $id_cliente =  !empty($this->user->getClienteId()) ? $this->user->getClienteId() : $id_cliente; 
+        if(!$this->user->isClient()){
+            
+            $id_cliente = $this->user->getIdUserByClient($id_cliente, $this->id_company);
+
+            $type = '(1,'.$id_cliente.')';
+
+        } else {
+
+            $id_cliente = $this->user->getId();
+            
+            $type = '(1,'.$id_cliente.')';
+
+        }
         
-        return $this->cliente->getComentarioByEtapaById($tipoEtapa, $id_cliente, $this->id_company);
+
+        return $this->cliente->getComentarioByEtapaById($tipoEtapa, $this->id_company, $type);
 
     }
 

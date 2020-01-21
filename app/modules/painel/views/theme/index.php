@@ -238,6 +238,9 @@
   <script src="<?php echo BASE_URL; ?>app/assets/css/AdminLTE-2.4.5/bower_components/moment/min/moment.min.js"></script>
   <script src="<?php echo BASE_URL; ?>node_modules/toastr/build/toastr.min.js"></script>
   <script src="<?php echo BASE_URL; ?>app/assets/css/AdminLTE-2.4.5/plugins/iCheck/icheck.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.webui-popover/1.2.1/jquery.webui-popover.min.css">
+  <script src="https://cdn.jsdelivr.net/jquery.webui-popover/1.2.1/jquery.webui-popover.min.js"></script>
+
 
   <?php if (isset($_SESSION['alert']) && !empty($_SESSION['alert'])) : ?>
     <script>

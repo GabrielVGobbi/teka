@@ -14,18 +14,6 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/checkout/">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>app/assets/css/AdminLTE-2.4.5/bower_components/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>app/assets/css/bootstrapPage.css">
-
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>app\assets\css\AdminLTE-2.4.5\bower_components\bootstrap-tour\build\css\bootstrap-tour.min.css">
-
-    <script src="<?php echo BASE_URL; ?>app\assets\css\AdminLTE-2.4.5\bower_components\bootstrap-tour\build\js/bootstrap-tour.min.js"></script>
-
-    <script src="<?php echo BASE_URL; ?>app\assets\css\AdminLTE-2.4.5\bower_components\bootstrap-tour\build\js/bootstrap-tour-standalone.js"></script>
-
-
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>app\assets\css\AdminLTE-2.4.5\bower_components\bootstrap-tour\build\css\bootstrap-tour-standalone.css">
-
-   
-   
     <script>
         var BASE_URL_PAINEL = '<?php echo BASE_URL_PAINEL; ?>';
     </script>
@@ -46,7 +34,7 @@
 
             <div class="row">
 
-                <div class="col-md-12 order-md-2 mb-4" id="tur1">
+                <div class="col-md-4 order-md-2 mb-4">
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                         <span class="text-muted">Etapas</span>
                         <span class="badge badge-secondary badge-pill"></span>
@@ -61,10 +49,12 @@
                     <ul class="list-group mb-3 etps-price">
                     </ul>
                 </div>
-                <div class="col-md-12 order-md-1">
+                <div class="col-md-8 order-md-1">
                     <h4 class="mb-3">Faça seu cadastro</h4>
 
-                    <input type="hidden" name="client" value="true">
+                    <input type="hidden" name="action" value="true">
+                    <input type="hidden" name="type" value="true">
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="cli_nome">Nome</label>
@@ -103,20 +93,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="mb-3 col-md-6">
-                            <label for="Login">Login</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">@</span>
-                                </div>
-                                <input type="text" onblur="validateClienteDouble(this)" class="form-control" name="cli_login" id="Login" placeholder="login" required>
-                                <div class="invalid-feedback" style="width: 100%;">
-                                    Seu Login é invalido.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 col-md-6">
+                    
+                        <div class="mb-3 col-md-12">
                             <label for="Senha">Senha</label>
                             <div class="input-group">
 
@@ -285,7 +263,7 @@
                         </li>
                     -->
                     <hr class="mb-4 ">
-                    <button id="tur2" class="col-md-3 btn btn-primary btn-lg btn-block float-left" type="submit">Criar</button>
+                    <button class="col-md-3 btn btn-primary btn-lg btn-block float-left" type="submit">Criar</button>
 
                 </div>
         </form>
@@ -325,26 +303,6 @@
         }())
 
         $(function() {
-
-            var tour = new Tour({
-                steps: [{
-                        element: "#tur1",
-                        title: "Tur1",
-                        content: "FUNCIFOU"
-                    },
-                    {
-                        element: "#tur2",
-                        title: "TUR2",
-                        content: "FUNCIFOU"
-                    }
-                ]
-            });
-
-            // Initialize the tour
-            //tour.init();
-
-            // Start the tour
-            //tour.start();
 
             $("#etapas_select").change(function(event) {
                 $('.etps-price').empty();
