@@ -40,7 +40,7 @@ class ClientesController extends controller
 
             $this->cliente->maxPerPage(10);
 
-            $this->dataInfo['tableDados'] = $this->cliente->paginate();
+            $this->dataInfo['tableDados'] = $this->cliente->paginate(' WHERE id_company ='.$this->user->getCompany());
 
             #$this->email->notifyEmailClient(84, $this->user->getCompany());
 
@@ -164,20 +164,26 @@ class ClientesController extends controller
 
     }
     public function getComentarioByEtapaById($tipoEtapa, $id_cliente){
-
-        if(!$this->user->isClient()){
+        
+        
+        #é cliente
+        if($this->user->isClient()){
+        error_log(print_r('é cliente',1));
             
-            $id_cliente = $this->user->getIdUserByClient($id_cliente, $this->id_company);
-
-            $type = '(1,'.$id_cliente.')';
-
-        } else {
-
             $id_cliente = $this->user->getId();
             
             $type = '(1,'.$id_cliente.')';
 
+        } else {
+        error_log(print_r('n é cliente',1));
+            
+            #$id_cliente = $this->user->getIdUserByClient($id_cliente, $this->id_company);
+
+            $type = '(1,'.$id_cliente.')';
+
         }
+
+        error_log(print_r($type,1));
         
 
         return $this->cliente->getComentarioByEtapaById($tipoEtapa, $this->id_company, $type);

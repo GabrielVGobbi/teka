@@ -84,7 +84,9 @@ class homeController extends controller
 
 		$id_cliente =  !empty($this->user->getClienteId()) ? $this->user->getClienteId() : $id_cliente;
 
-		return $this->cliente->getComentarioByEtapaById($tipoEtapa, $id_cliente, $this->id_company);
+		$type = '(1,'.$id_cliente.')';
+
+		return $this->cliente->getComentarioByEtapaById($tipoEtapa,$this->id_company,$type);
 	}
 
 

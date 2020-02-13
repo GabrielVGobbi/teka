@@ -36,10 +36,9 @@ class Users extends model
 
 			if($row['user_photo_url'] == ''){
 				
-				controller::alert('warning', 'Atualize sua foto de perfil');
+				#controller::alert('warning', 'Atualize sua foto de perfil');
 
 			}
-
 
 			return $row;
 		} else {
@@ -93,7 +92,7 @@ class Users extends model
 	}
 
 	public function isClient(){
-		if(isset($this->userInfo['id_cliente'])){
+		if(isset($this->userInfo['id_cliente']) && $this->userInfo['usr_info'] == 'cliente' ){
 			return true;
 		} else 
 		return 0;

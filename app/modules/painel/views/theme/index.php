@@ -19,29 +19,24 @@
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/AdminLTE-2.4.5/plugins/iCheck/all.css">
 
   <link rel="stylesheet" href="<?php echo BASE_URL; ?>app/assets/js/wheelmenu.css">
-<style>
-
-
-   
-    .wheel-button:hover{
+  <style>
+    .wheel-button:hover {
       color: white;
     }
 
-
- 
-
-    .wheel li a, .wheel li a:visited{
-      background: rgba(0,0,0,0.65);
+    .wheel li a,
+    .wheel li a:visited {
+      background: rgba(0, 0, 0, 0.65);
       border-radius: 50px;
       font-weight: bold;
       padding: 10px;
       text-align: center;
       width: 80px;
-    height: 59px;
+      height: 59px;
       border: 1px solid black;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.5);
-      -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.5);
-      -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.5);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+      -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+      -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.5);
       color: white;
       -moz-transition: all 0.25s ease;
       -webkit-transition: all 0.25s ease;
@@ -49,10 +44,10 @@
       transition: all 0.25s ease;
     }
 
-    .wheel li a:hover{
-      background: rgba(0,0,0,0.8);
+    .wheel li a:hover {
+      background: rgba(0, 0, 0, 0.8);
     }
-</style>
+  </style>
   <script type="text/javascript" src="<?php echo BASE_URL; ?>app/assets/js/jquery.wheelmenu.min.js"></script>
 
 
@@ -104,7 +99,7 @@
               <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Meus Looks <span class="sr-only">(current)</span></a></li>
               </ul>
-              
+
             </div>
           <?php endif; ?>
 
@@ -112,16 +107,16 @@
             <ul class="nav navbar-nav">
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <?php if(!$this->user->isClient()): ?>
+                  <?php if (!$this->user->isClient()) : ?>
                     <img src="<?php echo ($this->user->getPhoto()) ?>" class="user-image" alt="User Image">
-                  <?php endif;?>
+                  <?php endif; ?>
                   <span class="hidden-xs"><?php echo $this->user->getName(); ?></span>
                 </a>
                 <ul class="dropdown-menu">
                   <li class="user-header">
-                    <?php if(!$this->user->isClient()): ?>
+                    <?php if (!$this->user->isClient()) : ?>
                       <img src="<?php echo ($this->user->getPhoto()) ?>" class="img-circle" alt="User Image">
-                    <?php endif;?>
+                    <?php endif; ?>
 
                     <p>
                       <?php echo $this->user->getName(); ?>
@@ -182,7 +177,16 @@
                   <li><a href="#"><i class="fa fa-fw fa-file-pdf-o"></i> Relatorio</a></li>
                 </ul>
               </li>
-
+            
+              <li class="">
+                <a href="<?php echo BASE_URL_PAINEL; ?>calendario">
+                  <i class="fa fa-calendar"></i> <span>Calendario</span>
+                </a>
+                <ul class="treeview-menu">
+                  <li><a href="<?php echo BASE_URL_PAINEL; ?>clientes/add"><i class="fa fa-fw fa-plus"></i> Adicionar</a></li>
+                  <li><a href="#"><i class="fa fa-fw fa-file-pdf-o"></i> Relatorio</a></li>
+                </ul>
+              </li>
             </ul>
           <?php endif; ?>
         </section>

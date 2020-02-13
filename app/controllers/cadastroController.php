@@ -1,6 +1,6 @@
 <?php 
 
-class cadastroController extends Controller {
+class cadastroController extends controller {
 	
 	public function __construct()
     {
@@ -53,3 +53,4 @@ class cadastroController extends Controller {
 
 
 }
+?>

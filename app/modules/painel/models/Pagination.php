@@ -1,5 +1,4 @@
-
-  <?php
+<?php
 
     trait Pagination
     {
@@ -257,5 +256,4 @@
             return substr($url, 0, strpos($url, "?" . $namePager));
         }
     }
-
-    ?>
+?>

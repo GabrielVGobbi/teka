@@ -160,22 +160,22 @@ $comentario = $this->getComentarioByEtapaById(TESTEDECOLORACAOPESSOAL, $tableInf
   display: flex;
   flex-direction: column-reverse; height:250px">
 
-                    <?php foreach ($comentario as $com) : ?>
+                    <?php #foreach ($comentario as $com) : ?>
 
-                        <div class="direct-chat-msg <?php echo $com['id_user'] != $this->user->getId() ? 'right' : ''; ?>">
+                        <div class="direct-chat-msg <?php #echo $com['id_user'] != $this->user->getId() ? 'right' : ''; ?>">
                             <div class="direct-chat-info clearfix">
                                 <span class="direct-chat-name pull-left">Stephani Varella</span>
                                 <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
                             </div>
                             <?php
-                            $photo = $this->user->getId() != $com['id_user'] ? $this->painel->getFoto($tableInfo['id_client'], $tableInfo['cli_photo']) : $this->user->getPhoto();
+                            #$photo = $this->user->getId() != $com['id_user'] ? $this->painel->getFoto($tableInfo['id_client'], $tableInfo['cli_photo']) : $this->user->getPhoto();
                             ?>
-                            <img class="direct-chat-img" src="<?php echo $photo; ?>" alt="message user image">
+                            <img class="direct-chat-img" src="<?php #echo $photo; ?>" alt="message user image">
                             <div class="direct-chat-text">
-                                <?php echo $com['comentario']; ?>
+                                <?php #echo $com['comentario']; ?>
                             </div>
                         </div>
-                    <?php endforeach; ?>
+                    <?php #endforeach; ?>
 
                 </div>
                 <div class="box-footer">

@@ -1,6 +1,6 @@
 <?php
 
-class Cliente extends Model
+class Cliente extends model
 {
 
 	var $table = 'client';
@@ -165,7 +165,6 @@ class Cliente extends Model
 	public function edit($Parametros, $id_company, $file, $id_user)
 	{
 
-		error_log(print_r($Parametros,1));
 		$id_cliente = $Parametros['id'];
 
 		$id_endereco = $this->setEnderecoCliente($Parametros, $id_company, $Parametros['end']);
@@ -609,22 +608,24 @@ class Cliente extends Model
 
 	public function getComentarioByEtapaById($id_etapa, $id_company, $type)
 	{
-
 		if (!empty($type))
 			try {
 
 				$sql = $this->db->prepare("SELECT comentario,id_user,user.name
 					FROM comentarios_etapa cmp
-						INNER JOIN users user on (user.id = cmp.id_user)
-					WHERE cmp.id_company = :id_company AND id_etapa = :id_etapa AND id_user IN {$type} ORDER BY cme_id DESC
+						INNER JOIN users user on (user.id_cliente = cmp.id_user)
+					WHERE cmp.id_company = :id_company AND id_etapa = :id_etapa AND id_user IN {$type} ORDER BY cme_id DESC LIMIT 1
 				");
 
 				$sql->bindValue(":id_company", $id_company);
 				$sql->bindValue(":id_etapa", $id_etapa);
+error_log(print_r($sql,1));
+
 				$sql->execute();
-				if ($sql->rowCount() > 0) {
-					$this->retorno = $sql->fetchALL();
-					return $this->retorno;
+
+				if ($sql->rowCount() == 1) {
+					$this->retorno = $sql->fetch();
+					return $this->retorno['comentario'];
 				}
 			} catch (PDOExecption $e) {
 

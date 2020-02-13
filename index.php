@@ -1,12 +1,5 @@
 <?php 
-
-/*
-* Front controller da aplicação
-* @author Gabriel <gabriel.gobbi15@gmail.com>
-*/
-
 session_start();
-
 
 //Configurações gerais
 require 'system/config.php';
@@ -44,5 +37,4 @@ spl_autoload_register(function($class) {
 //Inicializando a aplicação
 $core = new Core();
 $core->run();
-
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-class Site extends Model
+class Site extends model
 {
 
 	#Cliente Cadastrado Pelo Site 
@@ -217,3 +217,4 @@ class Site extends Model
 		return $this->retorno;
 	}
 }
+?>

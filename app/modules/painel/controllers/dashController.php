@@ -1,6 +1,6 @@
 <?php 
 
-class dashController extends Controller {
+class dashController extends controller {
 
 	public function index() {
 		$teste = new Teste();

@@ -2,10 +2,12 @@
 <div class="col-md-12">
 	<div class="nav-tabs-custom">
 		<ul class="nav nav-tabs">
-			<li class=""><a href="#tab_dados" data-toggle="tab">Dados</a></li>
+			<li class="active"><a href="#tab_dados" data-toggle="tab">Dados</a></li>
 			<?php $permissions = array();
 			foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-				<li class="<?php echo $value == 'Teste de Coloração Pessoal' ? 'active' : '' ?>"><a href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
+				<li class="
+					<?php #echo $value == 'Teste de Coloração Pessoal' ? 'active' : '' ?>
+				"><a href="#<?php echo str_replace(' ', '', $value); ?>" data-toggle="tab"><?php echo $value; ?></a></li>
 				<?php $permissions[] = $value; ?>
 			<?php endforeach; ?>
 			<li class=""><a href="#tab_geral" data-toggle="tab">Geral</a></li>
@@ -20,7 +22,7 @@
 		</ul>
 		<div class="tab-content">
 
-			<div class="tab-pane " id="tab_dados">
+			<div class="tab-pane active " id="tab_dados">
 				<br>
 				<form method="POST" id="edit_client" action="<?php echo BASE_URL_PAINEL; ?>clientes/action" enctype="multipart/form-data">
 					<input type="hidden" id="id" name="id" value="<?php echo $tableInfo['id_client']; ?>" />
@@ -200,7 +202,7 @@
 				</div>
 			</div>
 			<?php foreach ($tableInfo['permissions'] as $perm => $value) : ?>
-				<div class="tab-pane <?php echo $value == 'Teste de Coloração Pessoal' ? 'active' : '' ?>" id="<?php echo str_replace(' ', '', $value); ?>">
+				<div class="tab-pane <?php #echo $value == 'Teste de Coloração Pessoal' ? 'active' : '' ?>" id="<?php echo str_replace(' ', '', $value); ?>">
 					<?php include_once('includes/' . str_replace(' ', '', $value) . '.php'); ?>
 				</div>
 			<?php endforeach; ?>
