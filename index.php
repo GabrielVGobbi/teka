@@ -8,7 +8,6 @@ require 'app/config/routes.php';
 // constantes
 require 'system/constant.php';
 
-
 require 'vendor/autoload.php';
 
 //Carregamento automático de classes

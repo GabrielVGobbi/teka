@@ -67,7 +67,6 @@ class Email extends Model {
 
 			$cliente = $c->getInfo($id_cliente, $id_company);
 
-			error_log(print_r($cliente,1));
 
 			exit();
 

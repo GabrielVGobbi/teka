@@ -29,8 +29,6 @@ class ClientesController extends controller
             'nome_tabela'   => 'cliente',
             'titlePage' => 'clientes'
         );
-
-        
     }
 
     public function index()
@@ -40,12 +38,11 @@ class ClientesController extends controller
 
             $this->cliente->maxPerPage(10);
 
-            $this->dataInfo['tableDados'] = $this->cliente->paginate(' WHERE id_company ='.$this->user->getCompany());
+            $this->dataInfo['tableDados'] = $this->cliente->paginate(' WHERE id_company =' . $this->user->getCompany());
 
             #$this->email->notifyEmailClient(84, $this->user->getCompany());
 
             $this->loadView($this->dataInfo['pageController'] . "/index", $this->dataInfo);
-            
         } else {
 
             $this->loadViewErrorNotPermission();
@@ -75,21 +72,19 @@ class ClientesController extends controller
 
                 $id_cliente = $this->cliente->add($_POST, $this->user->getCompany(), $_FILES);
 
-                if(isset($_POST['notifyEmail']) && ($_POST['notifyEmail'] == 'true')){
+                if (isset($_POST['notifyEmail']) && ($_POST['notifyEmail'] == 'true')) {
 
                     $this->email->notifyEmailClient($id_cliente, $this->user->getCompany());
-                    
                 }
 
                 header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $id_cliente);
 
                 exit();
-
             } else {
 
-                $this->cliente->edit($_POST, $this->user->getCompany(), $_FILES, $this->user->getId() );
-                
-                header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $_POST['id'] );
+                $this->cliente->edit($_POST, $this->user->getCompany(), $_FILES, $this->user->getId());
+
+                header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $_POST['id']);
 
                 exit();
             }
@@ -108,6 +103,8 @@ class ClientesController extends controller
             $this->dataInfo['permissons_all']   = $this->permissions->getlistCliente($this->id_company);
 
 
+            $this->dataInfo['titlePage']  = 'Cliente';
+
             if (!empty($this->dataInfo['tableInfo'])) {
                 $this->loadView($this->dataInfo['pageController'] . "/editar", $this->dataInfo);
             } else {
@@ -125,8 +122,8 @@ class ClientesController extends controller
             $this->dataInfo['tableInfo']        = $this->cliente->getInfo($id_cliente, $this->id_company);
             $this->dataInfo['etapas']   = $this->painel->getEtapas(true);
             $this->dataInfo['perguntas']   = $this->painel->getperguntas($this->user->getCompany());
-            
-            
+
+
             $this->loadView($this->dataInfo['pageController'] . "/include/Entrevista", $this->dataInfo, false);
         } else {
 
@@ -144,53 +141,48 @@ class ClientesController extends controller
             header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $_POST['id_cliente']);
 
             exit();
-        } 
+        }
     }
 
-    public function deleteFotoCliente($id_img, $id_cliente){
-        
+    public function deleteFotoCliente($id_img, $id_cliente)
+    {
+
         if (isset($id_cliente) && $id_cliente != '') {
 
             $cliente = $this->cliente->getClienteByIdName($id_cliente, $this->user->getCompany());
 
-            $nomecliente = str_replace(' ', '_', $cliente['cli_nome']).'_'.str_replace(' ', '_', $cliente['cli_sobrenome']);
+            $nomecliente = str_replace(' ', '_', $cliente['cli_nome']) . '_' . str_replace(' ', '_', $cliente['cli_sobrenome']);
 
             $this->cliente->deleteFotoByCliente($id_cliente, $id_img, $nomecliente, $this->user->getCompany());
 
             header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController']);
 
             exit();
-        } 
-
+        }
     }
-    public function getComentarioByEtapaById($tipoEtapa, $id_cliente){
-        
-        
-        #é cliente
-        if($this->user->isClient()){
-        error_log(print_r('é cliente',1));
-            
-            $id_cliente = $this->user->getId();
-            
-            $type = '(1,'.$id_cliente.')';
+    public function getComentarioByEtapaById($tipoEtapa, $id_cliente)
+    {
 
+
+        #é cliente
+        if ($this->user->isClient()) {
+
+            $id_cliente = $this->user->getId();
+
+            $type = '(1,' . $id_cliente . ')';
         } else {
-        error_log(print_r('n é cliente',1));
-            
+
             #$id_cliente = $this->user->getIdUserByClient($id_cliente, $this->id_company);
 
-            $type = '(1,'.$id_cliente.')';
-
+            $type = '(1,' . $id_cliente . ')';
         }
 
-        error_log(print_r($type,1));
-        
 
         return $this->cliente->getComentarioByEtapaById($tipoEtapa, $this->id_company, $type);
-
     }
 
-    public function ColoracaoByClient($id_cliente){
+    public function ColoracaoByClient($id_cliente)
+    {
 
         if (isset($_POST) && $id_cliente != '') {
 
@@ -199,7 +191,6 @@ class ClientesController extends controller
             header('Location:' . BASE_URL_PAINEL . $this->dataInfo['pageController'] . '/info/' . $id_cliente);
 
             exit();
-        } 
-
+        }
     }
 }

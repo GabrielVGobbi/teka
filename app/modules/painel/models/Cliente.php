@@ -33,7 +33,10 @@ class Cliente extends model
 	{
 		$sql = $this->db->prepare("SELECT * FROM client cli 
 			INNER JOIN cliente_endereco clie ON (clie.id_endereco = cli.id_address)
-			WHERE id_company = :id_company AND id_client = :id_client LIMIT 1
+			INNER JOIN users user ON (user.id_cliente = cli.id_client)
+			INNER JOIN entrevista ent ON (ent.id_entrevista = cli.id_entrevista)
+
+			WHERE cli.id_company = :id_company AND cli.id_client = :id_client LIMIT 1
 		");
 
 		$sql->bindValue(':id_client', $id_cliente);
@@ -87,6 +90,7 @@ class Cliente extends model
 	{
 
 		$id_endereco = $this->setEnderecoCliente($Parametros, $id_company);
+		$id_entrevista = $this->setEntrevistaCliente(array(), $id_company);
 
 		$cli_nome 		 = isset($Parametros['cli_nome']) ? controller::ReturnValor($Parametros['cli_nome']) : '';
 		$cli_sobrenome 	 = isset($Parametros['cli_sobrenome']) ? controller::ReturnValor($Parametros['cli_sobrenome'])  : '';
@@ -109,6 +113,7 @@ class Cliente extends model
 				cli_email       = :cli_email,
 				id_address 		= :id_endereco,
 				cli_etapas 		= :params,
+				id_entrevista = :id_entrevista,
 				
 				created_at		= NOW(),
 				id_company 		= :id_company
@@ -123,6 +128,8 @@ class Cliente extends model
 			$sql->bindValue(":cli_email", $cli_email);
 			$sql->bindValue(":id_endereco", $id_endereco);
 			$sql->bindValue(":id_company", $id_company);
+			$sql->bindValue(":id_entrevista", $id_entrevista);
+
 			$sql->bindValue(":params", $params);
 
 			if ($sql->execute()) {
@@ -164,10 +171,12 @@ class Cliente extends model
 
 	public function edit($Parametros, $id_company, $file, $id_user)
 	{
-
+		
 		$id_cliente = $Parametros['id'];
 
 		$id_endereco = $this->setEnderecoCliente($Parametros, $id_company, $Parametros['end']);
+
+		$id_entrevista = $this->setEntrevistaCliente($Parametros['entrevista'], $id_company, $Parametros['id_entrevista']);
 
 		$cli_nome 		 = isset($Parametros['cli_nome']) ? controller::ReturnValor($Parametros['cli_nome']) : '';
 		$cli_sobrenome 	 = isset($Parametros['cli_sobrenome']) ? controller::ReturnValor($Parametros['cli_sobrenome'])  : '';
@@ -190,6 +199,7 @@ class Cliente extends model
 				cli_email       = :cli_email,
 				id_address 		= :id_endereco,
 				cli_etapas 		= :params,
+				id_entrevista 	= :id_entrevista,
 				
 				edited_at		= NOW(),
 				edited_by		= :id_user
@@ -206,6 +216,8 @@ class Cliente extends model
 			$sql->bindValue(":id_endereco", $id_endereco);
 			$sql->bindValue(":id_company", $id_company);
 			$sql->bindValue(":params", $params);
+			$sql->bindValue(":id_entrevista", $id_entrevista);
+
 
 			$sql->bindValue(":id_client", $id_cliente);
 			$sql->bindValue(":id_user", $id_user);
@@ -237,6 +249,47 @@ class Cliente extends model
 		#_FILES['fotos']
 	}
 
+	public function setEntrevistaCliente($perguntas, $id_company, $id_entrevista = false)
+	{
+
+		$perguntas['entrevista'] = json_encode($perguntas,JSON_UNESCAPED_UNICODE);
+
+
+		if ($id_entrevista == false) {
+
+			$sql = $this->db->prepare("INSERT INTO entrevista SET 
+				
+				perguntas = :perguntas
+			
+			");
+			$sql->bindValue(":perguntas", $perguntas);
+			
+
+			$sql->execute();
+
+			$id_entrevista = $this->db->lastInsertId();
+		
+		} else {
+
+			$sql = $this->db->prepare("UPDATE `entrevista` SET  
+				
+				perguntas = :perguntas
+
+				WHERE id_entrevista = :id_entrevista
+			
+			");
+			$sql->bindValue(":perguntas", 		$perguntas['entrevista']);
+			$sql->bindValue(":id_entrevista", $id_entrevista);
+
+			$sql->execute()
+				? controller::alert('success', 'Editado com sucesso')
+				: controller::alert('error', 'Ops!! deu algum erro');
+		}
+
+		return $id_entrevista;
+	}
+
+
 	public function setEnderecoCliente($Parametros, $id_company, $id_endereco = false)
 	{
 
@@ -246,12 +299,16 @@ class Cliente extends model
 				
 				cep = :cep,
 				rua = :rua, 
+				bairro = :bairro,
+				cidade = :cidade,
 				numero = :numero,
 				complemento = :complemento
 			
 			");
 			$sql->bindValue(":cep", $Parametros['cep']);
 			$sql->bindValue(":rua", $Parametros['rua']);
+			$sql->bindValue(":bairro", $Parametros['bairro']);
+			$sql->bindValue(":cidade", $Parametros['cidade']);
 			$sql->bindValue(":numero", $Parametros['numero']);
 			$sql->bindValue(":complemento", $Parametros['complemento']);
 
@@ -264,6 +321,8 @@ class Cliente extends model
 				
 				cep = :cep,
 				rua = :rua, 
+				bairro = :bairro,
+				cidade = :cidade,
 				numero = :numero,
 				complemento = :complemento
 
@@ -272,6 +331,8 @@ class Cliente extends model
 			");
 			$sql->bindValue(":cep", $Parametros['cep']);
 			$sql->bindValue(":rua", $Parametros['rua']);
+			$sql->bindValue(":bairro", $Parametros['bairro']);
+			$sql->bindValue(":cidade", $Parametros['cidade']);
 			$sql->bindValue(":numero", $Parametros['numero']);
 			$sql->bindValue(":complemento", $Parametros['complemento']);
 			$sql->bindValue(":id_endereco", $id_endereco);
@@ -619,7 +680,6 @@ class Cliente extends model
 
 				$sql->bindValue(":id_company", $id_company);
 				$sql->bindValue(":id_etapa", $id_etapa);
-error_log(print_r($sql,1));
 
 				$sql->execute();
 

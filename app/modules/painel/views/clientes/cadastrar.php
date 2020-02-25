@@ -120,10 +120,24 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Rua</label>
                                                     <input type="text" class="form-control" readonly name="rua" id="rua" value="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Bairro</label>
+                                                    <input type="text" class="form-control" readonly name="bairro" id="bairro" value="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Cidade</label>
+                                                    <input type="text" class="form-control" readonly name="cidade" id="cidade" value="">
                                                 </div>
                                             </div>
 
@@ -134,7 +148,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-2">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Complemento</label>
                                                     <input type="text" class="form-control" name="complemento" id="complemento" value="">

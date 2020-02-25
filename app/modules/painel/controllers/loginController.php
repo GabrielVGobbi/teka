@@ -32,7 +32,7 @@ class loginController extends controller {
 			$row = $u->doLogin($login, $pass);
 
 			if(isset($row['id']) && $row['id'] != ''){
-				if($row['id_cliente'] != ''){
+				if($row['id_cliente'] != '' && $row['usr_info'] == 'cliente'){
 					header("location:".BASE_URL_PAINEL."home");
 					exit;
 				} else { 
@@ -62,3 +62,4 @@ class loginController extends controller {
 		
 	}
 }
+?>

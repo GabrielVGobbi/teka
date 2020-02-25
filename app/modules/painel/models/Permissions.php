@@ -26,7 +26,7 @@ class Permissions extends model {
 
 			$params = $row['params'];
 
-			$sql = $this->db->prepare("SELECT name FROM permission_params WHERE id IN($params) AND id_company = :id_company");
+			$sql = $this->db->prepare("SELECT name FROM permission_params pm WHERE id IN($params) AND id_company = :id_company ORDER BY pm.order DESC");
 			$sql->bindValue(':id_company', $id_company);
 			$sql->execute();
 

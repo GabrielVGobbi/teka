@@ -244,7 +244,8 @@
   <script src="<?php echo BASE_URL; ?>app/assets/css/AdminLTE-2.4.5/plugins/iCheck/icheck.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.webui-popover/1.2.1/jquery.webui-popover.min.css">
   <script src="https://cdn.jsdelivr.net/jquery.webui-popover/1.2.1/jquery.webui-popover.min.js"></script>
-
+  <!--<link rel="stylesheet" type="text/css" href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/assets/css/plugins.css?v=040200">
+  <link rel="stylesheet" type="text/css" href="http://localhost/Projeto-em-desenvolvimento/SocialMafia/assets/css/core.css?v=040200">-->
 
   <?php if (isset($_SESSION['alert']) && !empty($_SESSION['alert'])) : ?>
     <script>

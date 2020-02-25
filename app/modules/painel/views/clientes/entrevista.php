@@ -11,7 +11,6 @@
 
     <script src="<?php echo BASE_URL; ?>app/assets/css/AdminLTE-2.4.5/bower_components/jquery/dist/jquery.min.js"></script>
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/checkout/">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>app/assets/css/AdminLTE-2.4.5/bower_components/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>app/assets/css/bootstrapPage.css">
     <script>
@@ -21,7 +20,10 @@
 
 <body class="bg-light">
     <div class="container">
+
         <div class="py-5 text-center">
+            <a href="<?php echo BASE_URL_PAINEL;?>clientes/info/<?php echo $tableInfo['id_client'];?>" class="btn btn-primary" >Voltar</a>
+            <h2>ESTOU PENSANDO EM COMO SALVAR ISSO AQUI (TA DIFICL KKK) ENTÃO AINDA NÃO ESTA SALVANDO </h2>
             <img class="d-block mx-auto mb-4" src="<?php echo BASE_URL; ?>app/assets/imagens/logo2.png" alt="" width="72" height="72">
             <h2>CONSULTORIA
                 DE IMAGEM &
@@ -36,67 +38,86 @@
                 <h4 class="mb-3">Entrevista</h4>
                 <form class="needs-validation" novalidate action="<?php echo BASE_URL_PAINEL; ?>clientes/action/" method="POST">
                 <input type="hidden"  class="form-control" name="id" id="id" value="<?php echo $tableInfo['id_client']; ?>">
-                    
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <label for="cli_nome">Nome</label>
-                            <input type="text" class="form-control" name="cli_nome" id="cli_nome" placeholder="" value="<?php echo $tableInfo['cli_nome']; ?>" required>
-                            <div class="invalid-feedback">
-                                Nome Invalido.
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="sobrenome">Sobrenome</label>
-                            <input type="text" class="form-control" name="cli_sobrenome" id="sobrenome" placeholder="" value="<?php echo $tableInfo['cli_sobrenome']; ?>" required>
-                            <div class="invalid-feedback">
-                                Sobrenome Invalido.
-                            </div>
-                        </div>
+                <input type="hidden"  class="form-control" name="end" id="end" value="<?php echo $tableInfo['id_endereco']; ?>">
+                <input type="hidden"  class="form-control" name="id_entrevista" id="id_entrevista" value="<?php echo isset($tableInfo['id_entrevista']) && $tableInfo['id_entrevista'] != '' ? $tableInfo['id_entrevista'] : ''; ?>">
+                <input type="hidden" class="form-control" name="cli_nome" id="cli_nome" placeholder="" value="<?php echo $tableInfo['cli_nome']; ?>" required>
 
-                        <div class="col-md-3 mb-3">
-                            <label for="cli_nascimento">Data de Nascimento</label>
-                            <input type="text" class="form-control" name="cli_nascimento" id="cli_nascimento" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="" value="<?php echo $tableInfo['cli_aniversario']; ?>" required>
-                            <div class="invalid-feedback">
-                                Data Invalida.
+                    <div style="display:none">
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label for="cli_nome">Nome</label>
+                                <div class="">
+                                    Nome Invalido.
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="sobrenome">Sobrenome</label>
+                                <input type="text" class="form-control" name="cli_sobrenome" id="sobrenome" placeholder="" value="<?php echo $tableInfo['cli_sobrenome']; ?>" >
+                                <div class="">
+                                    Sobrenome Invalido.
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label for="sobrenome">Sobrenome</label>
+                                <input type="text" class="form-control" name="cli_telefone" id="cli_telefone" placeholder="" value="<?php echo $tableInfo['cli_telefone']; ?>" >
+                                <div class="">
+                                    Sobrenome Invalido.
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label for="cli_aniversario">Data de Nascimento</label>
+                                <input type="text" class="form-control" name="cli_aniversario" id="cli_aniversario" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="" value="<?php echo $tableInfo['cli_aniversario']; ?>" >
+                                <div class="">
+                                    Data Invalida.
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="cli_profissao">Profissão (Opcional)</label>
+                                <input type="text" class="form-control" name="cli_profissao" id="cli_profissao" placeholder="" value="<?php echo $tableInfo['cli_profissao']; ?>">
                             </div>
                         </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="cli_profissao">Profissão (Opcional)</label>
-                            <input type="text" class="form-control" name="cli_profissao" id="cli_profissao" placeholder="" value="<?php echo $tableInfo['cli_profissao']; ?>">
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="cep">CEP</label>
-                        <input type="text" class="form-control" name="cep" id="cep" placeholder="0000-000" size="10" value="<?php echo $tableInfo['cep']; ?>" maxlength="9" required onblur="pesquisacep(this.value);" data-inputmask="'mask': ['99999-999']" data-maskrequired>
-                        <div class="invalid-feedback">
-                            Coloque seu cep
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="rua">Rua</label>
-                        <input type="text" class="form-control" name="rua" id="rua" placeholder="" value="<?php echo $tableInfo['rua']; ?>">
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <label for="numero">Nº</label>
-                            <input type="text" class="form-control" name="numero" id="numero" placeholder="" value="<?php echo $tableInfo['numero']; ?>" required>
-                            <div class="invalid-feedback">
-                                Precisamos saber o numero
+                        <div class="mb-3">
+                            <label for="cli_email">Email</label>
+                            <input type="text" class="form-control" name="cli_email" id="cli_email" value="<?php echo $tableInfo['cli_email']; ?>" >
+                            <div class="">
+                                Coloque seu cep
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label for="cep">CEP</label>
+                            <input type="text" class="form-control" name="cep" id="cep" placeholder="0000-000" size="10" value="<?php echo $tableInfo['cep']; ?>" maxlength="9"  onblur="pesquisacep(this.value);" data-inputmask="'mask': ['99999-999']" data-mask>
+                            <div class="">
+                                Coloque seu cep
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="rua">Rua</label>
+                            <input type="text" class="form-control" name="rua" id="rua" placeholder="" value="<?php echo $tableInfo['rua']; ?>">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label for="numero">Nº</label>
+                                <input type="text" class="form-control" name="numero" id="numero" placeholder="" value="<?php echo $tableInfo['numero']; ?>" >
+                                <div class="">
+                                    Precisamos saber o numero
+                                </div>
+                            </div>
 
-                        <div class="col-md-9 mb-3">
-                            <label for="complement0">Complemento</label>
-                            <input type="text" class="form-control" name="complemento" id="complemento" value="<?php echo $tableInfo['complemento']; ?>" placeholder="">
+                            <div class="col-md-9 mb-3">
+                                <label for="complement0">Complemento</label>
+                                <input type="text" class="form-control" name="complemento" id="complemento" value="<?php echo $tableInfo['complemento']; ?>" placeholder="">
+                            </div>
                         </div>
                     </div>
                     <div class="mb-4"></div>
                     
-                    <h4 class="mb-4">Perguntas</h4>
 
                     <div class="row">
+                            
                         <?php foreach ($perguntas as $per): ?>
+                      
                             <div class="col-md-12 mb-3">
                                 <label for="<?php echo $per['clip_pergunta']; ?>"><?php echo $per['clip_pergunta']; ?></label>
                                 <input type="text" class="form-control" name="entrevista[<?php echo $per['clip_pergunta']; ?>]" id="<?php echo $per['clip_pergunta']; ?>" placeholder="Resposta: " value="">
@@ -104,6 +125,7 @@
                                     
                                 </div>
                             </div>
+                        
                         <?php endforeach; ?>
                         
                     </div>
