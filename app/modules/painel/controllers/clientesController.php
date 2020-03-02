@@ -99,7 +99,7 @@ class ClientesController extends controller
 
             $this->dataInfo['tableInfo']        = $this->cliente->getInfo($id_cliente, $this->id_company);
             $this->dataInfo['paleta']           = $this->cliente->getPaleta($this->id_company);
-            $this->dataInfo['entrevista']       = $this->cliente->getEntrevista($this->id_company);
+            //$this->dataInfo['entrevista']       = $this->cliente->getEntrevista($this->id_company);
             $this->dataInfo['permissons_all']   = $this->permissions->getlistCliente($this->id_company);
 
 
@@ -120,8 +120,7 @@ class ClientesController extends controller
         if ($this->user->hasPermission('clientes_view') && $this->user->hasPermission('clientes_edit')) {
 
             $this->dataInfo['tableInfo']        = $this->cliente->getInfo($id_cliente, $this->id_company);
-            $this->dataInfo['etapas']   = $this->painel->getEtapas(true);
-            $this->dataInfo['perguntas']   = $this->painel->getperguntas($this->user->getCompany());
+            $this->dataInfo['etapas']           = $this->painel->getEtapas(true);
 
 
             $this->loadView($this->dataInfo['pageController'] . "/include/Entrevista", $this->dataInfo, false);

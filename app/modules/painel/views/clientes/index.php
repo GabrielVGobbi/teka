@@ -14,7 +14,7 @@
 			</form>-->
 	
 	</div>
-	<div class="container">
+	<div class="container-fluid">
 		<br>
 		<div class="row">
 			<?php if ($tableDados && count($tableDados) > 0) : ?>
@@ -22,7 +22,7 @@
 					<?php $nomecliente = str_replace(' ', '_', $dd['cli_nome']) . '_' . str_replace(' ', '_', $dd['cli_sobrenome']);  ?>
 
 					<a href="<?php echo BASE_URL_PAINEL ?>clientes/info/<?php echo $dd['id_client']; ?>">
-						<div class="col-md-3">
+						<div class="col-md-2">
 							<div class="box box-primary" style="min-height: 340px; max-height: 340px;">
 								<div class="box-body box-profile">
 									<img style="max-height: 110px;min-height: 110px;" class="profile-user-img img-responsive img-circle" src="<?php echo BASE_URL ?>app/assets/images/clientes/<?php echo mb_strtolower($dd['id_client'], 'UTF-8') ?>/<?php echo mb_strtolower($dd['cli_photo'], 'UTF-8') ?>" alt="User profile picture">

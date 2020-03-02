@@ -57,6 +57,8 @@ class Painel extends model
 		if($sql->rowCount() > 0 ) {
 			$this->retorno = $sql->fetchAll();
         }
+
+        #error_log(print_r($this->retorno,1));
         
         return $this->retorno;
 

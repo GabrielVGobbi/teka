@@ -89,6 +89,7 @@ class Cliente extends model
 	public function add($Parametros, $id_company, $file)
 	{
 
+
 		$id_endereco = $this->setEnderecoCliente($Parametros, $id_company);
 		$id_entrevista = $this->setEntrevistaCliente(array(), $id_company);
 
@@ -137,9 +138,9 @@ class Cliente extends model
 				$id_cliente = $this->db->lastInsertId();
 
 				//Add usuario pelo cliente cadastrado
-				
+
 				$this->addUsuarioByCliente($id_company, $Parametros, $id_cliente);
-				
+
 				$nome_cliente = str_replace(' ', '_', $cli_nome);
 				$cli_sobrenome = str_replace(' ', '_', $cli_sobrenome);
 				$name = mb_strtolower($nome_cliente . '_' . $cli_sobrenome, 'UTF-8');
@@ -171,7 +172,7 @@ class Cliente extends model
 
 	public function edit($Parametros, $id_company, $file, $id_user)
 	{
-		
+
 		$id_cliente = $Parametros['id'];
 
 		$id_endereco = $this->setEnderecoCliente($Parametros, $id_company, $Parametros['end']);
@@ -252,24 +253,27 @@ class Cliente extends model
 	public function setEntrevistaCliente($perguntas, $id_company, $id_entrevista = false)
 	{
 
-		$perguntas['entrevista'] = json_encode($perguntas,JSON_UNESCAPED_UNICODE);
-
-
 		if ($id_entrevista == false) {
-
+			$painel = new Painel();
+			$perguntas = $painel->getperguntas($id_company);
+			$array = array();
+			foreach ($perguntas as $pergunta) {
+				$array += [
+					$pergunta['clip_pergunta'] => ''
+				];
+			}
 			$sql = $this->db->prepare("INSERT INTO entrevista SET 
 				
 				perguntas = :perguntas
 			
 			");
-			$sql->bindValue(":perguntas", $perguntas);
-			
-
+			$sql->bindValue(":perguntas", json_encode($array, JSON_UNESCAPED_UNICODE));
 			$sql->execute();
 
 			$id_entrevista = $this->db->lastInsertId();
-		
 		} else {
+
+			$perguntas['entrevista'] = json_encode($perguntas, JSON_UNESCAPED_UNICODE);
 
 			$sql = $this->db->prepare("UPDATE `entrevista` SET  
 				

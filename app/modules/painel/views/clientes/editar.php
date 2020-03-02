@@ -1,4 +1,26 @@
-<?php $nomecliente = str_replace(' ', '_', $tableInfo['cli_nome']); ?>
+<?php
+
+$nomecliente = str_replace(' ', '_', $tableInfo['cli_nome']);
+$idade = 0;
+if ($tableInfo['cli_aniversario'] != '') {
+	$data = $tableInfo['cli_aniversario'];
+
+	// Separa em dia, mês e ano
+	list($dia, $mes, $ano) = explode('/', $data);
+
+	// Descobre que dia é hoje e retorna a unix timestamp
+	$hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+	// Descobre a unix timestamp da data de nascimento do fulano
+	$nascimento = mktime(0, 0, 0, $mes, $dia, $ano);
+
+	// Depois apenas fazemos o cálculo já citado :)
+	$idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
+}
+
+
+
+
+?>
 <div class="col-md-12">
 	<div class="nav-tabs-custom">
 		<ul class="nav nav-tabs">
@@ -32,7 +54,7 @@
 				<form method="POST" id="edit_client" action="<?php echo BASE_URL_PAINEL; ?>clientes/action" enctype="multipart/form-data">
 					<input type="hidden" id="id" name="id" value="<?php echo $tableInfo['id_client']; ?>" />
 					<div class="row">
-						<div class="col-md-3">
+						<div class="col-md-2">
 							<button type="button" class="close pull-left" data-dismiss="modal" aria-label="Close">
 							</button>
 							<?php $nomecliente = str_replace(' ', '_', $tableInfo['cli_nome']) . '_' . str_replace(' ', '_', $tableInfo['cli_sobrenome']);  ?>
@@ -47,7 +69,7 @@
 								<img style="max-height: 110px;min-height: 110px;">
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-5">
 							<div id="formnome" class="form-group">
 								<label>Nome</label>
 								<div class="input-group">
@@ -59,7 +81,7 @@
 							</div>
 						</div>
 
-						<div class="col-md-3">
+						<div class="col-md-5">
 							<div id="formnome" class="form-group">
 								<label>Sobrenome</label>
 								<div class="input-group">
@@ -71,7 +93,9 @@
 							</div>
 						</div>
 
-						<div class="col-md-3">
+
+
+						<div class="col-md-10">
 							<div id="formnome" class="form-group">
 								<label>Email</label>
 								<div class="input-group">
@@ -91,6 +115,18 @@
 										<i class="fa fa-envelope"></i>
 									</div>
 									<input type="text" class="form-control" name="cli_aniversario" id="cli_aniversario" value="<?php echo $tableInfo['cli_aniversario']; ?>" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-2">
+							<div id="formnome" class="form-group">
+								<label>Idade</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-fw fa-birthday-cake"></i>
+									</div>
+									<input type="text" class="form-control" name="idade" id="idade" value="<?php echo $idade; ?>">
 								</div>
 							</div>
 						</div>
@@ -120,7 +156,11 @@
 						</div>
 
 
-						<div class="col-md-9">
+
+
+
+
+						<div class="col-md-10">
 							<div class="box box-default box-solid">
 								<div class="row">
 									<div class="col-md-12">
@@ -157,6 +197,20 @@
 												</div>
 											</div>
 
+											<div class="col-md-3">
+												<div class="form-group">
+													<label>Municipio</label>
+													<input type="text" readonly class="form-control" name="municipio" id="municipio" autocomplete="off" value="<?php echo $tableInfo['municipio']; ?>">
+												</div>
+											</div>
+
+											<div class="col-md-3">
+												<div class="form-group">
+													<label>Estado</label>
+													<input type="text" readonly class="form-control" name="estado" id="estado" autocomplete="off" value="<?php echo $tableInfo['estado']; ?>">
+												</div>
+											</div>
+
 											<div class="col-md-2">
 												<div class="form-group">
 													<label>Nº</label>
@@ -170,6 +224,8 @@
 													<input type="text" class="form-control" name="complemento" id="complemento" autocomplete="off" value="<?php echo $tableInfo['complemento']; ?>">
 												</div>
 											</div>
+
+											
 										</div>
 									</div>
 								</div>
