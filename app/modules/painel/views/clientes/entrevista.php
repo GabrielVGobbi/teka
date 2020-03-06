@@ -23,7 +23,6 @@
 
         <div class="py-5 text-center">
             <a href="<?php echo BASE_URL_PAINEL; ?>clientes/info/<?php echo $tableInfo['id_client']; ?>" class="btn btn-primary">Voltar</a>
-            <h2>ESTOU PENSANDO EM COMO SALVAR ISSO AQUI (TA DIFICL KKK) ENTÃO AINDA NÃO ESTA SALVANDO </h2>
             <img class="d-block mx-auto mb-4" src="<?php echo BASE_URL; ?>app/assets/imagens/logo2.png" alt="" width="72" height="72">
             <h2>CONSULTORIA
                 DE IMAGEM &
